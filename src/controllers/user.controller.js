@@ -8,7 +8,7 @@ const registerUser = asyncHandler( async (req, res)=>{
     /*
 
     // Algorithm while registering the user 
-    
+
      step 1: get user details from frontend
      step 2: validation - not empty
      step 3: check if user already exists: username, email 
@@ -34,15 +34,20 @@ const registerUser = asyncHandler( async (req, res)=>{
     else if(password === "") throw new ApiError(400, "Password is required")
 
     // step 3: check if user already exists: username , email 
-    const existedUser = User.findOne({
+    const existedUser = await User.findOne({
         $or: [{ username }, { email }]
     })
 
-    if(existedUser) throw ApiError(409, "User with email or username already exists !")
+    if(existedUser) throw new ApiError(409, "User with email or username already exists !")
 
     // step 4: check for images, avatar 
     const avatarLocalPath = req.files?.avatar[0]?.path;
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+    let coverImageLocalPath;
+    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+        coverImageLocalPath = req.files.coverImage[0].path
+    }
 
     if(!avatarLocalPath) throw new ApiError(400, 'Avatar file is required')
 
@@ -70,7 +75,7 @@ const registerUser = asyncHandler( async (req, res)=>{
     )
 
     // step 8: check for user creation 
-    if(!createdUser) throw ApiError(500, "Something went wrong while registering the user");
+    if(!createdUser) throw new ApiError(500, "Something went wrong while registering the user");
 
     // step 9: return response 
     return res.status(201).json(
