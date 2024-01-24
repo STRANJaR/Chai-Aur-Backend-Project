@@ -5,6 +5,8 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import jwt from 'jsonwebtoken'
 
+
+//  ***GENERATE ACCESS REFRESH TOKEN 
 const generateAccessRefreshTokens = async(userId)=>{
     try {
         const user = await User.findById(userId)
@@ -19,6 +21,9 @@ const generateAccessRefreshTokens = async(userId)=>{
         throw new ApiError(500, "Somethign went wrong while generating referesh and access token")
     }
 }
+
+
+// ***REGISTER USER 
 const registerUser = asyncHandler( async (req, res)=>{
     /*
 
@@ -99,7 +104,7 @@ const registerUser = asyncHandler( async (req, res)=>{
 }); 
 
 
-
+// ***LOGIN USER 
 const loginUser = asyncHandler(async (req, res)=>{
     /*
     // Algorithm while login user 
@@ -112,8 +117,11 @@ const loginUser = asyncHandler(async (req, res)=>{
 
     */
 
+    // step 1: req body -> data 
     const {email, username, password} = req.body
-console.log(email)
+    console.log(email)
+
+    // step 2: username or email condition check
     if(!username && !email) throw new ApiError(400, "username and password is required ")
     
     const userValidation = await User.findOne({
@@ -129,15 +137,18 @@ console.log(email)
 
     if(!userValidation) throw new ApiError(404, "User does not exist")
 
+    // step 3: password check 
     const isPasswordValid = await userValidation.isPasswordCorrect(password)
 
     if(!isPasswordValid) throw new ApiError(400, "Invalid user credentials")
 
+    // step 4: access and refresh token 
     const {accessToken, refreshToken} = await generateAccessRefreshTokens(userValidation._id)
 
     const loggedInUser = await User.findById(userValidation._id).
     select("-password -refreshToken")
 
+    // step 5: send cookie 
     const options = {
         httpOnly: true,
         secure: true
@@ -159,10 +170,11 @@ console.log(email)
 })
 
 
-
+// ***LOG OUT USER 
 const logoutUser = asyncHandler( async (req, res)=>{
-    // add algorithm 
+    
 
+    // find user current user
     await User.findByIdAndUpdate(
         req.user._id,
         {
@@ -176,7 +188,7 @@ const logoutUser = asyncHandler( async (req, res)=>{
 
     )
 
-
+    // remove cookies 
     const options = {
         httpOnly: true,
         secure: true
@@ -197,8 +209,9 @@ const logoutUser = asyncHandler( async (req, res)=>{
 
 
 
-
+// ***REFRESH ACCESS TOKEN 
 const refreshAccessToken = asyncHandler( async(req, res)=>{
+    // access cookie for refresh token 
     const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
 
     if(!incomingRefreshToken) throw new ApiError(401, "unauthorized request")
@@ -233,9 +246,38 @@ const refreshAccessToken = asyncHandler( async(req, res)=>{
         throw new ApiError(401, error?.message || "Invalid refresh token")
     }
 })
+
+
+// ***UPDATE PASSWORD 
+const changeCurrentUserPassword = asyncHandler( async(req, res)=>{
+    // require old and new password from user 
+    const {oldPassword, newPassword} = req.body
+
+    const user = await User.findById(req.user?.id)
+    const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
+
+    if(!isPasswordCorrect) throw new ApiError(400, "Invalid Old Password")
+
+    user.password = newPassword
+    await user.save({validateBeforeSave: false})
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            {},
+            "Password updated successfully"
+        )
+    )
+})
+
+
+
 export {
     registerUser,
     loginUser,
     logoutUser,
-    refreshAccessToken
+    refreshAccessToken,
+    changeCurrentUserPassword,
 }
