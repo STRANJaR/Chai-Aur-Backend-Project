@@ -113,8 +113,8 @@ const loginUser = asyncHandler(async (req, res)=>{
     */
 
     const {email, username, password} = req.body
-
-    if(!username || !email) throw new ApiError(400, "username and password is required ")
+console.log(email)
+    if(!username && !email) throw new ApiError(400, "username and password is required ")
     
     const userValidation = await User.findOne({
         $or: [
@@ -133,7 +133,7 @@ const loginUser = asyncHandler(async (req, res)=>{
 
     if(!isPasswordValid) throw new ApiError(400, "Invalid user credentials")
 
-    const {accessToken, refreshToken} = await generateAccessRefreshTokens(user._id)
+    const {accessToken, refreshToken} = await generateAccessRefreshTokens(userValidation._id)
 
     const loggedInUser = await User.findById(userValidation._id).
     select("-password -refreshToken")
@@ -186,7 +186,7 @@ const logoutUser = asyncHandler( async (req, res)=>{
     .status(200)
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
-    .json(200, {}, "User logged Out Successfully ")
+    .json(200, {}, "User logged Out Successfully")
 })
 export {
     registerUser,
