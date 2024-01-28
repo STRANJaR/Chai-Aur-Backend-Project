@@ -400,7 +400,7 @@ const getUserChannelProfile = asyncHandler( async(req, res)=>{
                 $lookup: {
                     from: "subscriptions",
                     localField: "_id",
-                    foreignField: "channel",
+                    foreignField: "subscriber",
                     as: "subscribedTo"
                 }
             },
@@ -410,7 +410,7 @@ const getUserChannelProfile = asyncHandler( async(req, res)=>{
                         $size: "$subscribers",
                     },
                     channelsSubscribedToCount: {
-                        $size: "subscribedTo"
+                        $size: "$subscribedTo"
                     },
                     isSubscribed: {
                         $cond: {
@@ -494,7 +494,7 @@ const getWathHistory = asyncHandler( async(req, res)=>{
     return res
     .status(200)
     .json(
-        new ApiResponse(200, user[0].wathHistory, "watch history fetched successfully")
+        new ApiResponse(200, user[0].watchHistory, "watch history fetched successfully")
     )
 })
 export {
