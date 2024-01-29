@@ -99,6 +99,12 @@ const deleteTweet = asyncHandler( async(req, res) => {
     )
 })
 
+
+// GET ALL TWEETS OF USER 
+const getUserTweets = asyncHandler( async(req, res) => {
+    
+    // TODO: write pipelines for all tweet 
+})
 export {
     createTweet,
     updateTweet,
