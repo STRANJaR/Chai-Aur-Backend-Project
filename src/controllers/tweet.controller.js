@@ -6,7 +6,7 @@ import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
 
 
-
+// ***CREATE TWEET 
 const createTweet = asyncHandler( async(req, res)=>{
    /* // ALGORITHM FOR CREATE TWEETS 
 
@@ -39,6 +39,7 @@ const createTweet = asyncHandler( async(req, res)=>{
 })
 
 
+// ***UPDATE TWEET 
 const updateTweet = asyncHandler( async(req, res) => {
     // Algorithm while updating the tweet 
 
@@ -59,6 +60,7 @@ const updateTweet = asyncHandler( async(req, res) => {
 
     const tweet = await Tweet.findById(tweetId)
 
+    if(!tweet) throw new ApiError(400, "tweed id not found")
     const newTweet = await Tweet.findByIdAndUpdate(
         tweetId,
         {
@@ -76,7 +78,29 @@ const updateTweet = asyncHandler( async(req, res) => {
     )
 }) 
 
+
+
+// ***DELETE TWEET 
+const deleteTweet = asyncHandler( async(req, res) => {
+    const { tweetId } = req.params
+
+    if(!tweetId) throw new ApiError(400, "tweet id not found")
+
+    const tweet = Tweet.findById(tweetId)
+
+    if(!tweet) throw new ApiError(400, "tweet id not found")
+
+    await Tweet.findByIdAndDelete(tweetId)
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, {}, "Tweet deleted successfully ")
+    )
+})
+
 export {
     createTweet,
-    updateTweet
+    updateTweet,
+    deleteTweet
 }
