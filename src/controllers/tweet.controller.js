@@ -16,24 +16,25 @@ const createTweet = asyncHandler( async(req, res)=>{
     */
 
     // step 1: request the content form user 
-    const { content, user } = req.body
-    // const { user } = req.cookies
+    const { content } = req.body
+    const user = await User.findById(req.user._id)
 
     // step 2: check if empty content
     if(!content) throw new ApiError(400, "Please write something...")
 
-    const tweet = await Tweet.create({
+    const tweet = await Tweet.create(
+       {
         content,
         user
-
-    })
+       }
+    )
 
     if(!tweet) throw new ApiError(400, "something went wrong while creating tweet")
 
     return res
     .status(201)
     .json(
-        new ApiResponse(200, user, "Tweet created successfully ")
+        new ApiResponse(200, tweet, "Tweet created successfully ")
     )
 })
 
