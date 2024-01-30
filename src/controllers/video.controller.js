@@ -52,6 +52,30 @@ const uploadVideo = asyncHandler( async(req, res) => {
 })
 
 
+const deleteVideo = asyncHandler( async(req, res) => {
+    // Algorithm while  delete video 
+    // step 1: find video id which want to delete 
+    // step 2: validation of video id 
+    // step 3: find in db and delete them 
+    // step 4: validate video deleted or not 
+    // step 5: return response 
+
+    const { videoId } = req.params;
+
+    if(!videoId) throw new ApiError(400, "Invalid video id")
+
+    const deletedVideo = await Video.findByIdAndDelete(videoId)
+
+    if(!deletedVideo) throw new ApiError(400, "something went wrong while deleting the video")
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Video deleted successfully"))
+
+})
+
+
 export {
-    uploadVideo
+    uploadVideo,
+    deleteVideo
 }
