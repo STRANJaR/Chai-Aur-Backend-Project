@@ -75,7 +75,55 @@ const deleteVideo = asyncHandler( async(req, res) => {
 })
 
 
+const updateVideo = asyncHandler( async(req, res) => {
+    // Algorithm while update video fields
+    // step 1: requirement of content form user like title, description
+    // step 2: check for which field want to be update 
+    // step 3: find video by id in db 
+    // step 4: check video exist in db or not 
+    // step 5: set the recuired update fields in db 
+    // step 6: check for updated object 
+    // step 7: return response 
+
+    const { title, description} = req.body;
+    const { videoId } = req.params;
+
+    if(!(title && description)) throw new ApiError(400, "title and description are required")
+
+    if(!videoId) throw new ApiError(400, "Invalid video id")
+ 
+    const localThumbnailPath = req.files?.thumbnail[0]?.path;
+    if(!localThumbnailPath) throw new ApiError(400, "Invalid thumbnail url")
+
+    const uploadedThumbnail = await uploadOnCloudinary(localThumbnailPath)
+    if(!uploadedThumbnail) throw new ApiError(400, "something went wrong while updating thumbnail ")
+
+    const video = await Video.findById(videoId)
+    if(!video) throw new ApiError(400, "video not found in db")
+
+    const updatedVideoContent = await Video.findByIdAndUpdate(
+        videoId,
+        {
+           $set: {
+            title,
+            description,
+            thumbnail : uploadedThumbnail.url
+           }
+        }, 
+        {new: true}
+    )
+
+    if(!updatedVideoContent) throw new ApiError(400, "something went wrong while updating the video content")
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, updatedVideoContent, "Video updated successfully ")
+    )
+})
+
 export {
     uploadVideo,
-    deleteVideo
+    deleteVideo,
+    updateVideo
 }
