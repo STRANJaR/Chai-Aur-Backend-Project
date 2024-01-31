@@ -41,7 +41,25 @@ const getPlaylistById = asyncHandler( async(req, res) => {
 
 })
 
+
+const deletePlaylist = asyncHandler( async(req, res) => {
+    const { playlistId } = req.params;
+
+    if(!playlistId) throw new ApiError(400, "Invalid playlist Id")
+
+    const playlist = await Playlist.findByIdAndDelete(playlistId)
+
+    if(!playlist) throw new ApiError(400, "something went wrong while deleting playlist")
+
+    return res
+    .status(200)
+    .json( new ApiResponse(200, {}, "Playlist deleted successfully"))
+
+    
+})
+
 export {
     createPlaylist,
-    getPlaylistById
+    getPlaylistById,
+    deletePlaylist
 }
