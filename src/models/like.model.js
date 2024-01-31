@@ -1,9 +1,9 @@
-import mongoose, {Schema, mongo} from "mongoose";
+import mongoose, {Schema} from "mongoose";
 
 
 const likeSchema = new Schema(
     {
-        commen: {
+        comment: {
             type: Schema.Types.ObjectId,
             ref: "Comment"
         },
