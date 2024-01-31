@@ -41,7 +41,35 @@ const deleteComment = asyncHandler( async(req, res) =>{
     .json( new ApiResponse(200, {}, "Comment deleted successfully"))
 })
 
+
+
+const updateComment = asyncHandler( async(req, res) => {
+    const { content } = req.body;
+    const { commentId } = req.params;
+
+    if(!content) throw new ApiError(400, "comment is required")
+    if(!commentId) throw new ApiError(400, "Invalid comment id")
+
+    const newComment = await Comment.findByIdAndUpdate(
+        commentId,
+        {
+            $set: {
+                content
+            }
+        },
+        {new: true}
+    )
+  
+    return res
+    .status(200)
+    .json( new ApiResponse(200, newComment, "Comment Updated successfully"))
+
+})
+
+
+
 export {
     addComment,
-    deleteComment
+    deleteComment,
+    updateComment
 }
