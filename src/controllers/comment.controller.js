@@ -3,6 +3,7 @@ import {asyncHandler }from '../utils/asyncHandler.js'
 import {ApiError} from '../utils/ApiError.js'
 import {ApiResponse} from '../utils/ApiResponse.js'
 import { Comment } from "../models/comment.model.js";
+import { Video } from "../models/video.model.js"
 
 const addComment = asyncHandler( async(req, res) => {
     const { content } = req.body;
@@ -67,9 +68,64 @@ const updateComment = asyncHandler( async(req, res) => {
 })
 
 
+const getVideoComments = asyncHandler(async(req, res) => {
+    const { videoId } = req.params;
+
+    const video = await Video.findById(videoId)
+    if(!video) throw new ApiError(404, "Video not found")
+
+    const comments = await Comment.aggregate(
+        [
+            {
+                $match: {
+                    video: new mongoose.Types.ObjectId(videoId)
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "owner",
+                    foreignField: "_id",
+                    as: "ownerDetails",
+                    pipeline: [
+                        {
+                            $project: {
+                                username: 1,
+                                fullName: 1,
+                                avatar: 1,
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $addFields: {
+                    ownerDetails: {
+                        $first: "$ownerDetails"
+                    }
+                }
+            },
+            {
+                $project:{
+                    content: 1,
+                    createdAt: 1,
+                    ownerDetails: 1
+                }
+            }
+        ]
+    )
+
+
+    if(!comments) throw new ApiError(400, "something went wrong while fetching comments")
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, comments, "Comments fetched successfully"))
+})
 
 export {
     addComment,
     deleteComment,
-    updateComment
+    updateComment,
+    getVideoComments
 }
