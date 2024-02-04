@@ -122,6 +122,26 @@ const updateVideo = asyncHandler( async(req, res) => {
     )
 })
 
+
+const getAllVideos = asyncHandler( async(req, res) => {
+    const allVideos = await Video.aggregate(
+        [
+            {
+                $lookup:{
+                    from: "users",
+                    localField: "owner",
+                    foreignField: "_id",
+                    as: "ownerDetails"
+                }
+            },
+        ]
+    )
+
+    return res
+    .status(200)
+    .json( new ApiResponse(200, allVideos, "Videos fetched successfully"))
+})
+
 export {
     uploadVideo,
     deleteVideo,

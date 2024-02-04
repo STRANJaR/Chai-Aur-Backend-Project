@@ -102,11 +102,58 @@ const deleteTweet = asyncHandler( async(req, res) => {
 
 // GET ALL TWEETS OF USER 
 const getUserTweets = asyncHandler( async(req, res) => {
-    
-    // TODO: write pipelines for all tweet 
+
+    const { userId } = req.params;
+
+    const userAllTweets = await Tweet.aggregate(
+        [
+            {
+                $match: {
+                    owner: new mongoose.Types.ObjectId(userId)
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "owner",
+                    foreignField: "_id",
+                    as: "ownerDetails",
+                    pipeline: [
+                        {
+                            $project: {
+                                username: 1,
+                                avatar: 1,
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $addFields: {
+                    ownerDetails: {
+                        $first: "$ownerDetails"
+                    }
+                }
+            },
+            {
+                $project: {
+                    content: 1,
+                    ownerDetails: 1,
+                    createdAt: 1
+                }
+            }
+        ]
+    )
+
+    if(!userAllTweets) throw new ApiError(400, "something went wrong while fetching the tweets")
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, userAllTweets, "Tweets fetched successfully"))
 })
 export {
     createTweet,
     updateTweet,
-    deleteTweet
+    deleteTweet,
+    getUserTweets
 }
