@@ -5,7 +5,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import jwt from 'jsonwebtoken'
 import mongoose from "mongoose"
-
+import nodemailer from 'nodemailer'
 
 //  ***GENERATE ACCESS REFRESH TOKEN 
 const generateAccessRefreshTokens = async(userId)=>{
@@ -98,6 +98,39 @@ const registerUser = asyncHandler( async (req, res)=>{
     // step 8: check for user creation 
     if(!createdUser) throw new ApiError(500, "Something went wrong while registering the user");
 
+    // FEATURE: MAIL RESPONSET 
+    
+    const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.MAIL_RESPONSE_EMAIL,
+                pass: process.env.MAIL_RESPONSE_SECRET
+            }
+        })
+
+    const mailOptions = {
+        from: "no-reply@VideoTube <noreply.rohitrks805@gmail.com>",
+        to: `${email}`,
+        subject: "Account Created Successfully",
+        html: `
+        <h3>Hi ${fullName}</h3>
+        <br>
+        <p>Your username:- <b>${username}</b>
+        <p>Your password:- <b>${password}</b>
+        </p>
+        <br>
+        <br>
+        <h5>Made with &#10084; By Rohit Shrivastav</h5>
+
+    `
+    }
+
+    if(createdUser){
+        transporter.sendMail(mailOptions, (err, info)=>{
+            if(err) console.log(err)
+            else console.log("Email sent successfully: " + info.response);
+        })
+    }
     // step 9: return response 
     return res.status(201).json(
         new ApiResponse(200, createdUser, "User registered Successfully !")
