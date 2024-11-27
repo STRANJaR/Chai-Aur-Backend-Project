@@ -1,8 +1,13 @@
 import React from 'react'
+import SidearYT from './SidearYT'
 
-function Home() {
+
+const Home = () => {
   return (
-    <div>Home</div>
+    <>
+      <SidearYT/>
+    </>
+
   )
 }
 
