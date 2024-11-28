@@ -1,10 +1,11 @@
 {
-  "name": "chai-aur-backend-project",
+  "name": "centralized-youtube",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "start": "node -r dotenv/config --experimental-json-modules src/index.js",
     "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
   },
   "author": "Rohit Shrivastav",
