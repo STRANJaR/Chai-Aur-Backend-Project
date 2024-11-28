@@ -7,6 +7,8 @@ import Home from './components/Home.jsx'
 import Login from './components/Login.jsx'
 
 
+import { ThemeProvider } from "@/components/theme-provider"
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -24,10 +26,15 @@ const router = createBrowserRouter([
   }
 ])
 ReactDOM.createRoot(document.getElementById('root')).render(
+
+  <ThemeProvider>
+
   <React.StrictMode>
     <RouterProvider router={router}>
 
     <App />
     </RouterProvider>
   </React.StrictMode>,
+  </ThemeProvider>
+
 )

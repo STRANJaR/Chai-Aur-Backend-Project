@@ -1,8 +1,14 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
 
+import { useTheme } from '../components/theme-provider'
+import { ArrowUp, CircleUser, LucideBell, Moon, Sun, Video } from 'lucide-react'
 
 const Header = () => {
+
+
+    const { setTheme, theme } = useTheme()
+    const dark = theme === 'dark'
 
     const { register, handleSubmit, watch, } = useForm();
 
@@ -11,7 +17,7 @@ const Header = () => {
     const handleSearch = () => {
         return;
     }
-    
+
     React.useEffect(() => {
         const { unsubscribe } = watch((value) => {
             console.log(value)
@@ -19,7 +25,7 @@ const Header = () => {
         return () => unsubscribe()
     }, [watch])
     return (
-        <div className='bg-gray-950 text-white h-14'>
+        <div className='shadow-sm border-b-2 h-18'>
             <div className='flex justify-between p-3'>
 
                 <div>
@@ -35,15 +41,33 @@ const Header = () => {
                             onChange={searchField}
                             {...register('yt-search')}
                         />
-                        <button className=''>search</button>
+                       
                     </form>
                 </div>
                 <div>
                     <div className='flex justify-between items-center gap-3'>
 
-                        <p>upload</p>
-                        <p>notification</p>
-                        <p>profile</p>
+                        <div 
+                        className={`hover:bg-slate-900 hover:transition-all p-2 rounded-full flex items-center cursor-pointer transition-transform duration-500
+                            ${dark ? 'rotate-180': 'rotate-0'}`
+                        }
+                        onClick={()=> setTheme(theme === 'dark'? 'light': 'dark')}>
+                            {dark ?  <Sun className='h-5 w-5 text-yellow-500 rotate-0 transition-all'/>
+                            : 
+                            <Moon className='h-5 w-5 text-blue-500 rotate-0 transition-all' />
+                            }
+                           
+                        </div>
+                        <div className='hover:bg-slate-900 transition-colors cursor-pointer p-2 rounded-full'>
+                            <Video className='h-5 w-5 text-gray-300 '/>
+                        </div>
+                        <div className='hover:bg-slate-900 transition-colors  cursor-pointer p-2 rounded-full'>
+                            <LucideBell className='h-5 w-5 text-gray-300 '/>
+                        </div>
+                        <div className='hover:bg-slate-900 transition-colors  cursor-pointer p-2 rounded-full'>
+                            <CircleUser className='h-5 w-5 text-gray-300 '/>
+                        </div>
+                        
                     </div>
 
                 </div>
