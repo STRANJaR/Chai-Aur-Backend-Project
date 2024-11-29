@@ -48,7 +48,7 @@ const Header = () => {
                     <div className='flex justify-between items-center gap-3'>
 
                         <div 
-                        className={`hover:bg-slate-900 hover:transition-all p-2 rounded-full flex items-center cursor-pointer transition-transform duration-500
+                        className={`hover:bg-slate-200 dark:hover:bg-slate-900 hover:transition-all p-2 rounded-full flex items-center cursor-pointer transition-transform duration-500
                             ${dark ? 'rotate-180': 'rotate-0'}`
                         }
                         onClick={()=> setTheme(theme === 'dark'? 'light': 'dark')}>
@@ -58,14 +58,14 @@ const Header = () => {
                             }
                            
                         </div>
-                        <div className='hover:bg-slate-900 transition-colors cursor-pointer p-2 rounded-full'>
-                            <Video className='h-5 w-5 text-gray-300 '/>
+                        <div className='dark:hover:bg-slate-900  hover:bg-slate-200 transition-colors cursor-pointer p-2 rounded-full'>
+                            <Video className='h-5 w-5 dark:text-gray-300 '/>
                         </div>
-                        <div className='hover:bg-slate-900 transition-colors  cursor-pointer p-2 rounded-full'>
-                            <LucideBell className='h-5 w-5 text-gray-300 '/>
+                        <div className='dark:hover:bg-slate-900 hover:bg-slate-200 transition-colors  cursor-pointer p-2 rounded-full'>
+                            <LucideBell className='h-5 w-5 dark:text-gray-300 '/>
                         </div>
-                        <div className='hover:bg-slate-900 transition-colors  cursor-pointer p-2 rounded-full'>
-                            <CircleUser className='h-5 w-5 text-gray-300 '/>
+                        <div className='dark:hover:bg-slate-900 hover:bg-slate-200 transition-colors  cursor-pointer p-2 rounded-full'>
+                            <CircleUser className='h-5 w-5 dark:text-gray-300 '/>
                         </div>
                         
                     </div>

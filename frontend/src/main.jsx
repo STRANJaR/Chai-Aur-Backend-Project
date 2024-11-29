@@ -1,26 +1,28 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
-import {RouterProvider, createBrowserRouter} from 'react-router-dom'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import './index.css'
+import Register from './components/Register.jsx'
 import Home from './components/Home.jsx'
-import Login from './components/Login.jsx'
+
 
 
 import { ThemeProvider } from "@/components/theme-provider"
+import Container from './components/Container/Container.jsx'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home/>,
+    element: <App/>,
     children: [
       {
-        path: 'login',
-        element: <Login/>
+        path: '/home',
+        element: <Home/>
       },
       {
-        path: 'register',
-        element: <Login/>
+        path: '/register',
+        element: <Register />
       }
     ]
   }
@@ -28,13 +30,12 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
 
   <ThemeProvider>
+    <React.StrictMode>
+      <RouterProvider router={router}>
 
-  <React.StrictMode>
-    <RouterProvider router={router}>
-
-    <App />
-    </RouterProvider>
-  </React.StrictMode>,
+        <App />
+      </RouterProvider>
+    </React.StrictMode>
   </ThemeProvider>
 
 )

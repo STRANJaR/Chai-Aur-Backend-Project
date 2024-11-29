@@ -6,7 +6,7 @@ import { Separator } from './ui/separator';
 
 const SidearYT = () => {
     return (
-        <Sidebar rootStyles={{backgroundColor: 'black'}} className='px-2 py-2 text-sm'>
+        <Sidebar  className='px-2 py-2 text-sm'>
             
             {/* <div className='flex justify-center items-center py-3'>
 
