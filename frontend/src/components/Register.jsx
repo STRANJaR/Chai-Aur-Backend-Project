@@ -1,87 +1,156 @@
 import React, { useState } from 'react'
+import { Button } from './ui/button'
+import { Label } from './ui/label'
+import { Input } from './ui/input'
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+
+import { useForm } from 'react-hook-form'
 import axios from 'axios'
 
-function Home() {
-  const [fullname, setFullname] = useState('');
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [avatar, setAvatar] = useState('');
-  const [coverImage, setCoverImage] = useState('') 
-
-  console.log(name, username, password, email, avatar, coverImage);
 
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const Register = () => {
+
+  const [file, setFile] = useState(null)
+  const [formData, setFormData] = useState({})
+  // console.log('Form data: ', formData)
+
+  const [avatarFile, setAvatarFile] = useState(null)
+  const [coverImageFile, setCoverImageFile] = useState(null)
+  console.log('avatar: ', avatarFile)
+  console.log('coverImage: ', coverImageFile)
+
+  const { register, handleSubmit, reset } = useForm();
+
+
+  const handleRegister = async (payload) => {
+    const formData = new FormData()
+    formData.append('username', payload.username)
+    formData.append('email', payload.email)
+    formData.append('fullName', payload.fullName)
+    formData.append('password', payload.password)
+
+    if(avatarFile) formData.append('avatar', avatarFile)
+    if(coverImageFile) formData.append('coverImage', coverImageFile)
+    
+    console.log(formData.get('username'))
+
     try {
-      const userData = {
-        fullname,
-        username, 
-        email,
-        password,
-        avatar,
-        coverImage
-      }
+      const user = await axios.post(`http://localhost:8000/api/v1/users/register`,
+        {
+          username: formData.get('username'),
+          email: formData.get('email'),
+          fullName: formData.get('fullName'),
+          password: formData.get('password'),
+          avatar: formData.get('avatar'),
+          coverImage: formData.get('coverImage'),
+        },
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      )
 
-      axios.post(`http://localhost:8000/api/v1/users/register`, userData)
-      .then((response)=> console.log(response.data))
+      if (user) console.log('user registered successfully', user)
+      
     } catch (error) {
-      console.log(error);
+      console.log('Error registering user', error)
     }
+    reset();
   }
+
+
   return (
-    <>
-    <section className='bg-red-200 h-screen w-full'>
-      <h1>hello</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="">Name:  
-          <input 
-          onChange={(e)=> setFullname(e.target.value)} 
-          value={fullname}
-          type="text" />
-        </label>
+    <section className='bg-gray-100 h-screen w-full  text-sm'>
+      <div className='grid grid-cols-2'>
 
-        <label htmlFor="username">Username: 
-        <input
-        value={username}
-        onChange={(e)=> setUsername(e.target.value)} 
-        type="text" />
-        </label>
+        <div className='col-span-1'>
+          <div className='flex justify-center items-center h-screen bg-red-500'>
 
-        <label htmlFor="email">Email: 
-          <input 
-          value={email}
-        onChange={(e)=> setEmail(e.target.value)} 
-          type="email" name="" id="" />
-        </label>
+            <img src="./yt-logo.svg" alt="" />
+          </div>
+        </div>
 
-        <label htmlFor="password"> Password: 
-          <input 
-          value={password}
-        onChange={(e)=> setPassword(e.target.value)} 
-          type="password" name="" id="" />
-        </label>
+        <div className='w-full'>
+          <Card className='bg-transparent border border-gray-500 outline-none  relative top-10 px-24  flex flex-col justify-center   border-none'>
+            <CardHeader className='text-center'>
+              <CardTitle>Create Your Account</CardTitle>
+              <CardDescription>Unlock Your World of Entertainment, Unlock Your World of Entertainment, Join the YouTube Community
 
-          <br />
+              </CardDescription>
+            </CardHeader>
 
-        <label htmlFor="avatar"> Avatar: 
-          <input 
-          value={avatar}
-        onChange={(e)=> setAvatar(e.target.files[0])} 
-          type="file" name="" id="" />
-        </label>
-        <label htmlFor="coverImage">CoverImage: 
-        <input 
-        value={coverImage}
-        onChange={(e)=> setCoverImage(e.target.files[0])} 
-        type="file" name="" id="" /></label>
+            <form onSubmit={handleSubmit(handleRegister)}>
 
-          <input type="submit" value="Submit" />
-      </form>
+              <main className='flex flex-col gap-3'>
+
+
+                {/* <Label>First Name</Label> */}
+                <Input
+                  className='bg-transparent border border-gray-500 outline-none '
+                  placeholder='Username'
+                  type='text'
+                  {...register('username', { required: true })}
+                />
+
+                <Input
+                  className='bg-transparent border border-gray-500 outline-none '
+                  placeholder='Email'
+                  type='text'
+                  {...register('email', {
+                    required: true, validate: {
+                      matchPatern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
+                        "Email address must be a valid address",
+                    }
+                  })}
+
+                />
+
+                <Input
+                  className='bg-transparent border border-gray-500 outline-none '
+                  placeholder='Full Name'
+                  type='text'
+                  {...register('fullName', { required: true })}
+                />
+
+                <Input
+                  className='bg-transparent border border-gray-500 outline-none '
+                  placeholder='Password'
+                  type='password'
+                  {...register('password', { required: true })}
+                />
+
+                <Label>Profile Picture</Label>
+                <Input
+                  className="block w-full  text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-300 dark:text-gray-400 focus:outline-none dark:bg-gray-300 dark:border-gray-600 dark:placeholder-gray-400"
+                  type="file"
+                  onChange={(e)=> setAvatarFile(e.target.files[0])}
+                />
+
+                <Label>Cover Image (Optional)</Label>
+                <Input
+                  className="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-300 dark:text-gray-400 focus:outline-none dark:bg-gray-300 dark:border-gray-600 dark:placeholder-gray-400"
+                  type="file"
+                  onChange={(e)=> setCoverImageFile(e.target.files[0])}
+                />
+              </main>
+
+              <Button
+                type='submit'
+                className='w-full'
+                variant='default'
+              >Submit</Button>
+
+            </form>
+          </Card>
+        </div>
+
+      </div>
+
     </section>
-    </>
   )
 }
 
-export default Home
+export default Register

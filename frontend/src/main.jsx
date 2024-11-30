@@ -11,14 +11,15 @@ import Home from './components/Home.jsx'
 import { ThemeProvider } from "@/components/theme-provider"
 import Container from './components/Container/Container.jsx'
 
+const user = false;
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App/>,
+    element: (user? <App/> : <Register/>),
     children: [
       {
-        path: '/home',
-        element: <Home/>
+        path: '/register',
+        element: <Register/>
       },
       {
         path: '/register',
@@ -32,7 +33,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <ThemeProvider>
     <React.StrictMode>
       <RouterProvider router={router}>
-
         <App />
       </RouterProvider>
     </React.StrictMode>
