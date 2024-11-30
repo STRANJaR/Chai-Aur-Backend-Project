@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import {useNavigate} from 'react-router-dom'
 import { Button } from './ui/button'
 import { Label } from './ui/label'
 import { Input } from './ui/input'
@@ -8,37 +9,37 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
+import { toast, ToastContainer } from 'react-toastify'
+import "react-toastify/dist/ReactToastify.css";
+import { Loader2 } from 'lucide-react'
 
-
+const BASE_URL = String(import.meta.BASE_URL)
 
 const Register = () => {
 
-  const [file, setFile] = useState(null)
-  const [formData, setFormData] = useState({})
-  // console.log('Form data: ', formData)
-
+  const navigate = useNavigate()
   const [avatarFile, setAvatarFile] = useState(null)
   const [coverImageFile, setCoverImageFile] = useState(null)
-  console.log('avatar: ', avatarFile)
-  console.log('coverImage: ', coverImageFile)
+  const [loading, setLoading] = useState(false)
+
 
   const { register, handleSubmit, reset } = useForm();
 
 
   const handleRegister = async (payload) => {
+    setLoading(true)
+
+    // Created form data for file specific payload 
     const formData = new FormData()
     formData.append('username', payload.username)
     formData.append('email', payload.email)
     formData.append('fullName', payload.fullName)
     formData.append('password', payload.password)
 
-    if(avatarFile) formData.append('avatar', avatarFile)
-    if(coverImageFile) formData.append('coverImage', coverImageFile)
-    
-    console.log(formData.get('username'))
+    if (avatarFile) formData.append('avatar', avatarFile)
+    if (coverImageFile) formData.append('coverImage', coverImageFile)
 
     try {
       const user = await axios.post(`http://localhost:8000/api/v1/users/register`,
@@ -53,17 +54,30 @@ const Register = () => {
         { headers: { 'Content-Type': 'multipart/form-data' } }
       )
 
-      if (user) console.log('user registered successfully', user)
-      
+      if (user) {
+        setLoading(false)
+        console.log('user registered successfully', user)
+        toast.success('User registered successfully')
+
+        setTimeout(() => {
+          navigate('/login')
+        }, 2000);
+      }
+
     } catch (error) {
-      console.log('Error registering user', error)
+      console.log(error.response.data.data)
+      toast.error(error.response.data.data, {
+        position: 'top-right',
+      })
     }
-    reset();
+    // reset();
+
+    setLoading(false)
   }
 
 
   return (
-    <section className='bg-gray-100 h-screen w-full  text-sm'>
+    <section className='dark:bg-gray-800 h-screen w-full  text-sm'>
       <div className='grid grid-cols-2'>
 
         <div className='col-span-1'>
@@ -124,16 +138,16 @@ const Register = () => {
 
                 <Label>Profile Picture</Label>
                 <Input
-                  className="block w-full  text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-300 dark:text-gray-400 focus:outline-none dark:bg-gray-300 dark:border-gray-600 dark:placeholder-gray-400"
+                  className="block w-full  text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-300  dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                   type="file"
-                  onChange={(e)=> setAvatarFile(e.target.files[0])}
+                  onChange={(e) => setAvatarFile(e.target.files[0])}
                 />
 
                 <Label>Cover Image (Optional)</Label>
                 <Input
-                  className="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-300 dark:text-gray-400 focus:outline-none dark:bg-gray-300 dark:border-gray-600 dark:placeholder-gray-400"
+                  className="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-300 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                   type="file"
-                  onChange={(e)=> setCoverImageFile(e.target.files[0])}
+                  onChange={(e) => setCoverImageFile(e.target.files[0])}
                 />
               </main>
 
@@ -141,14 +155,14 @@ const Register = () => {
                 type='submit'
                 className='w-full'
                 variant='default'
-              >Submit</Button>
+              > {loading ? <Loader2 className='transition-all animate-spin'/>: 'Submit'}</Button>
 
             </form>
           </Card>
         </div>
 
       </div>
-
+      <ToastContainer />
     </section>
   )
 }
