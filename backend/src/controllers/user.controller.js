@@ -59,7 +59,11 @@ const registerUser = asyncHandler( async (req, res)=>{
         $or: [{ username }, { email }]
     })
 
-    if(existedUser) throw new ApiError(409, "User with email or username already exists !")
+    if(existedUser){
+        return res.status(409).json(
+            new ApiResponse(409, "User with email or username already exists !")
+        )
+    } 
 
     // step 4: check for images, avatar 
     const avatarLocalPath = req.files?.avatar[0]?.path;
@@ -156,7 +160,11 @@ const loginUser = asyncHandler(async (req, res)=>{
     console.log(email)
 
     // step 2: username or email condition check
-    if(!username && !email) throw new ApiError(400, "username and password is required ")
+    if(!username && !email){
+        return res.status(400).json(
+            new ApiResponse(400, "username and password is required ")
+        )
+    }
     
     const userValidation = await User.findOne({
         $or: [
@@ -169,12 +177,20 @@ const loginUser = asyncHandler(async (req, res)=>{
         ]
     })
 
-    if(!userValidation) throw new ApiError(404, "User does not exist")
+    if(!userValidation){
+        return res.status(404).json(
+            new ApiResponse(404, 'User does not exist')
+        )
+    }
 
     // step 3: password check 
     const isPasswordValid = await userValidation.isPasswordCorrect(password)
 
-    if(!isPasswordValid) throw new ApiError(400, "Invalid user credentials")
+    if(!isPasswordValid){
+        return res.status(400).json(
+            new ApiResponse(400, 'Invalid user credentials')
+        )
+    } 
 
     // step 4: access and refresh token 
     const {accessToken, refreshToken} = await generateAccessRefreshTokens(userValidation._id)
