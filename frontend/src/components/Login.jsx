@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from './ui/button'
-import { Label } from './ui/label'
 import { Input } from './ui/input'
 import {
   Card,
@@ -15,13 +14,15 @@ import { toast, ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
 import { Loader2 } from 'lucide-react'
 
-const BASE_URL = String(import.meta.BASE_URL)
 
 const Login = () => {
 
   const [loading, setLoading] = useState(false)
-  const { register, handleSubmit } = useForm()
+  const { register, handleSubmit, reset } = useForm()
 
+  const navigate = useNavigate();
+
+  // handle login 
   const handleLogin = async (payload) => {
     setLoading(true);
 
@@ -37,11 +38,21 @@ const Login = () => {
       });
 
       if (user) {
+        setLoading(false)
         console.log(user.data)
         toast.success(user.data.message)
 
+        // set secret token in localStorage
         localStorage.setItem('accessToken', user.data.data.accessToken)
         localStorage.setItem('refreshToken', user.data.data.refreshToken)
+
+        // clear form fields
+        reset();
+
+        // navigate to dashboard
+        setTimeout(() => {
+          navigate('/dashboard')
+        }, 2000);
       }
     } catch (error) {
       setLoading(false)
