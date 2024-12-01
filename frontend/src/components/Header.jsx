@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import {
     DropdownMenu,
@@ -11,31 +11,59 @@ import {
 import { useTheme } from '../components/theme-provider'
 import { ArrowUp, CircleUser, Dock, LogOut, LucideBell, Moon, Settings, Sun, User, Video } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
+import axios from 'axios'
+import { logout } from '../store/authSlice'
+
 
 
 const Header = () => {
 
-    const user = useSelector(state => state.auth.user)
-    if (!user) toast.error('Unable to fetch user data')
+    const dispatch = useDispatch()
 
+    const user = useSelector(state => state.auth.user)
+    const token = useSelector(state => state.auth.token)
+    if (!user) toast.error('Unable to fetch user data')
 
     const { setTheme, theme } = useTheme();
     const dark = theme === 'dark';
     const { register, handleSubmit, watch, } = useForm();
     const searchField = watch('yt-search');
 
+
+
     const handleSearch = () => {
         return;
     }
+
+    // Handle Logout
+    const handleLogout = useCallback (async()=> {
+        try {
+            const response = await axios.post('http://localhost:8000/api/v1/users/logout', {}, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+
+            if(!response) toast.error('Something wrong while logout')
+            
+            toast.success(response.data.message)
+
+            dispatch(logout())
+            
+        } catch (error) {
+            console.log(error)
+            
+        }
+    }, [dispatch])
 
     React.useEffect(() => {
         const { unsubscribe } = watch((value) => {
             console.log(value)
         })
         return () => unsubscribe()
-    }, [watch])
+    }, [watch, dispatch, handleLogout])
     return (
         <div className='shadow-sm border-b-2 h-18'>
             <div className='flex justify-between p-3'>
