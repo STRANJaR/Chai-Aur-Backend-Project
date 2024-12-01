@@ -7,6 +7,11 @@ import Container from './components/Container/Container'
 import VideoCard from './components/VideoCard'
 import { Bounce, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import React from 'react'
+import { jwtDecode } from 'jwt-decode'
+import { useDispatch } from 'react-redux'
+import { setCredentials, } from './store/authSlice'
+
 
 
 
@@ -121,6 +126,32 @@ const videoData = [
 
 function App() {
 
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    const token = localStorage.getItem('accessToken')
+    const user = JSON.parse(localStorage.getItem('user'))
+
+
+    if (token && user) {
+      try {
+        const decodedToken = jwtDecode(token)
+
+
+        if (decodedToken.exp * 1000 < Date.now()) {
+          localStorage.removeItem('accessToken')
+          localStorage.removeItem('user')
+
+          console.log('removed token')
+        } else {
+          dispatch(setCredentials({ user, accessToken: token }));
+        }
+      } catch (error) {
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('user')
+      }
+    }
+  }, [dispatch])
 
   return (
     <>
@@ -145,7 +176,7 @@ function App() {
           </div>
 
           <div className='col-span-4'>
-            
+
             <Container className=' flex flex-wrap p-3 '>
               {videoData && videoData.map((video) => (
                 <Link to={video.videoUrl} className=' p-2' key={video.id}>

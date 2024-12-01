@@ -19,13 +19,12 @@ const Header = () => {
 
     const user = useSelector(state => state.auth.user)
     if (!user) toast.error('Unable to fetch user data')
-    console.log('USER: ', user)
-    const { setTheme, theme } = useTheme()
-    const dark = theme === 'dark'
 
+
+    const { setTheme, theme } = useTheme();
+    const dark = theme === 'dark';
     const { register, handleSubmit, watch, } = useForm();
-
-    const searchField = watch('yt-search')
+    const searchField = watch('yt-search');
 
     const handleSearch = () => {
         return;
@@ -77,13 +76,13 @@ const Header = () => {
                         <div className='dark:hover:bg-slate-900 hover:bg-slate-200 transition-colors  cursor-pointer p-2 rounded-full'>
                             <LucideBell className='h-5 w-5 dark:text-gray-300 ' />
                         </div>
-                        <div className='dark:hover:bg-slate-900 hover:bg-slate-200 transition-colors  cursor-pointer p-2 rounded-full'>
+                        <div className='pt-2 transition-colors  cursor-pointer rounded-full'>
 
 
                             <DropdownMenu>
                                 <DropdownMenuTrigger>
                                     <Avatar className='h-8 w-8'>
-                                        <AvatarImage src={user} />
+                                        <AvatarImage src={user.avatar} />
                                         <AvatarFallback>
                                             Me
                                         </AvatarFallback>
@@ -93,20 +92,20 @@ const Header = () => {
                                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem>
-                                        <User/>
+                                        <User />
                                         <span>Profile</span>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem>
-                                        <Dock/>
+                                        <Dock />
                                         <span>Subscription</span>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem>
-                                        <Settings/>
+                                        <Settings />
                                         <span>Settings</span>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem className='bg-red-500 text-white cursor-pointer my-1'>
-                                        <LogOut/>
-                                        <span>Log out</span>
+                                        <LogOut />
+                                        <span onClick={handleLogout}>Log out</span>
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>

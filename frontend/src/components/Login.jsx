@@ -43,13 +43,7 @@ const Login = () => {
 
       if (user) {
         setLoading(false)
-        console.log(user.data)
         toast.success(user.data.message)
-
-        // set secret token in localStorage
-        localStorage.setItem('accessToken', user.data.data.accessToken)
-        localStorage.setItem('refreshToken', user.data.data.refreshToken)
-
         dispatch(setCredentials(user.data.data))
 
         // clear form fields
@@ -69,8 +63,8 @@ const Login = () => {
     setLoading(false)
   }, [navigate])
 
-// render the page when changes accur
-  React.useEffect(() => { }, [handleLogin])
+  // render the page when changes accur
+  // React.useEffect(() => { }, [handleLogin, dispatch, navigate])
 
 
   return (
