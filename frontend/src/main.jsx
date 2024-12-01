@@ -12,6 +12,7 @@ import { Provider } from 'react-redux'
 import store from './store/store.js'
 import PrivateRoute from './components/AuthLayout/PrivateRoute.jsx'
 import PublicRoute from './components/AuthLayout/PublicRoute.jsx'
+import Profile from './components/User/Profile.jsx'
 
 
 
@@ -41,6 +42,14 @@ const router = createBrowserRouter([
           <PublicRoute>
             <Login/>
           </PublicRoute>
+        )
+      },
+      {
+        path: '/u',
+        element: (
+          <PrivateRoute>
+            <Profile/>
+          </PrivateRoute>
         )
       }
     ]

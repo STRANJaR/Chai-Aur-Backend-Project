@@ -15,6 +15,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 import { logout } from '../store/authSlice'
+import { Link } from 'react-router-dom'
 
 
 
@@ -121,7 +122,7 @@ const Header = () => {
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem>
                                         <User />
-                                        <span>Profile</span>
+                                        <Link to={'/u'}>Profile</Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem>
                                         <Dock />
