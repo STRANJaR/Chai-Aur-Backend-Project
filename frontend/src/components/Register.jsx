@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {useNavigate} from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from './ui/button'
 import { Label } from './ui/label'
 import { Input } from './ui/input'
@@ -155,9 +155,14 @@ const Register = () => {
                 type='submit'
                 className='w-full'
                 variant='default'
-              > {loading ? <Loader2 className='transition-all animate-spin'/>: 'Submit'}</Button>
+              > {loading ? <Loader2 className='transition-all animate-spin' /> : 'Submit'}</Button>
 
             </form>
+            <p className='font-medium py-2 text-center'>Already have an account?
+              <Link
+                className='text-blue-500 px-1 font-medium hover:underline'
+                to={'/login'}>Loing</Link>
+            </p>
           </Card>
         </div>
 

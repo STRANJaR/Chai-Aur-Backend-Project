@@ -1,12 +1,25 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
-
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from './ui/dropdown-menu'
 import { useTheme } from '../components/theme-provider'
-import { ArrowUp, CircleUser, LucideBell, Moon, Sun, Video } from 'lucide-react'
+import { ArrowUp, CircleUser, Dock, LogOut, LucideBell, Moon, Settings, Sun, User, Video } from 'lucide-react'
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
+import { useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
+
 
 const Header = () => {
 
-
+    const user = useSelector(state => state.auth.user)
+    if (!user) toast.error('Unable to fetch user data')
+    console.log('USER: ', user)
     const { setTheme, theme } = useTheme()
     const dark = theme === 'dark'
 
@@ -41,33 +54,65 @@ const Header = () => {
                             onChange={searchField}
                             {...register('yt-search')}
                         />
-                       
+
                     </form>
                 </div>
                 <div>
                     <div className='flex justify-between items-center gap-3'>
 
-                        <div 
-                        className={`hover:bg-slate-200 dark:hover:bg-slate-900 hover:transition-all p-2 rounded-full flex items-center cursor-pointer transition-transform duration-500
-                            ${dark ? 'rotate-180': 'rotate-0'}`
-                        }
-                        onClick={()=> setTheme(theme === 'dark'? 'light': 'dark')}>
-                            {dark ?  <Sun className='h-5 w-5 text-yellow-500 rotate-0 transition-all'/>
-                            : 
-                            <Moon className='h-5 w-5 text-blue-500 rotate-0 transition-all' />
+                        <div
+                            className={`hover:bg-slate-200 dark:hover:bg-slate-900 hover:transition-all p-2 rounded-full flex items-center cursor-pointer transition-transform duration-500
+                            ${dark ? 'rotate-180' : 'rotate-0'}`
                             }
-                           
+                            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+                            {dark ? <Sun className='h-5 w-5 text-yellow-500 rotate-0 transition-all' />
+                                :
+                                <Moon className='h-5 w-5 text-blue-500 rotate-0 transition-all' />
+                            }
+
                         </div>
                         <div className='dark:hover:bg-slate-900  hover:bg-slate-200 transition-colors cursor-pointer p-2 rounded-full'>
-                            <Video className='h-5 w-5 dark:text-gray-300 '/>
+                            <Video className='h-5 w-5 dark:text-gray-300 ' />
                         </div>
                         <div className='dark:hover:bg-slate-900 hover:bg-slate-200 transition-colors  cursor-pointer p-2 rounded-full'>
-                            <LucideBell className='h-5 w-5 dark:text-gray-300 '/>
+                            <LucideBell className='h-5 w-5 dark:text-gray-300 ' />
                         </div>
                         <div className='dark:hover:bg-slate-900 hover:bg-slate-200 transition-colors  cursor-pointer p-2 rounded-full'>
-                            <CircleUser className='h-5 w-5 dark:text-gray-300 '/>
+
+
+                            <DropdownMenu>
+                                <DropdownMenuTrigger>
+                                    <Avatar className='h-8 w-8'>
+                                        <AvatarImage src={user} />
+                                        <AvatarFallback>
+                                            Me
+                                        </AvatarFallback>
+                                    </Avatar>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent>
+                                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem>
+                                        <User/>
+                                        <span>Profile</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <Dock/>
+                                        <span>Subscription</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <Settings/>
+                                        <span>Settings</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem className='bg-red-500 text-white cursor-pointer my-1'>
+                                        <LogOut/>
+                                        <span>Log out</span>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+
                         </div>
-                        
+
                     </div>
 
                 </div>

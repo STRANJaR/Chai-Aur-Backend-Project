@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useCallback, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import {
@@ -13,6 +13,9 @@ import axios from 'axios'
 import { toast, ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
 import { Loader2 } from 'lucide-react'
+import { useDispatch } from 'react-redux'
+import { setCredentials } from '../store/authSlice'
+
 
 
 const Login = () => {
@@ -21,9 +24,10 @@ const Login = () => {
   const { register, handleSubmit, reset } = useForm()
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // handle login 
-  const handleLogin = async (payload) => {
+  const handleLogin = useCallback(async (payload) => {
     setLoading(true);
 
     try {
@@ -46,13 +50,15 @@ const Login = () => {
         localStorage.setItem('accessToken', user.data.data.accessToken)
         localStorage.setItem('refreshToken', user.data.data.refreshToken)
 
+        dispatch(setCredentials(user.data.data))
+
         // clear form fields
         reset();
 
         // navigate to dashboard
         setTimeout(() => {
           navigate('/dashboard')
-        }, 2000);
+        }, 1000);
       }
     } catch (error) {
       setLoading(false)
@@ -61,7 +67,12 @@ const Login = () => {
     }
 
     setLoading(false)
-  }
+  }, [navigate])
+
+// render the page when changes accur
+  React.useEffect(() => { }, [handleLogin])
+
+
   return (
     <>
       <section className='dark:bg-gray-800 h-screen w-full  text-sm'>
@@ -112,6 +123,11 @@ const Login = () => {
                 > {loading ? <Loader2 className='transition-all animate-spin' /> : 'Submit'}</Button>
 
               </form>
+              <p className='font-medium py-2 text-center'>Don't have an account?
+                <Link
+                  className='text-blue-500 px-1 font-medium hover:underline'
+                  to={'/register'}>create account</Link>
+              </p>
             </Card>
           </div>
 
