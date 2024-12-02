@@ -124,7 +124,7 @@ const videoData = [
 ];
 
 
-function App() {
+function App({children}) {
 
   const dispatch = useDispatch();
 
@@ -155,19 +155,6 @@ function App() {
 
   return (
     <>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        transition={Bounce}
-      />
       <div className='w-full h-auto'>
         <Header />
         <section className='grid grid-cols-5 '>
@@ -176,8 +163,7 @@ function App() {
           </div>
 
           <div className='col-span-4'>
-
-            <Container className=' flex flex-wrap p-3 '>
+            {/* <Container className=' flex flex-wrap p-3 '>
               {videoData && videoData.map((video) => (
                 <Link to={video.videoUrl} className=' p-2' key={video.id}>
 
@@ -192,7 +178,8 @@ function App() {
                 </Link>
 
               ))}
-            </Container>
+            </Container> */}
+            {/* <Outlet/> */}
           </div>
         </section>
       </div>

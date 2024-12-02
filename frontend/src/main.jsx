@@ -7,7 +7,6 @@ import Register from './components/Register.jsx'
 import { ThemeProvider } from "@/components/theme-provider"
 import 'react-toastify/dist/ReactToastify.css';
 import Login from './components/Login.jsx'
-import Home from './components/Home.jsx'
 import { Provider } from 'react-redux'
 import store from './store/store.js'
 import PrivateRoute from './components/AuthLayout/PrivateRoute.jsx'
@@ -56,13 +55,15 @@ const router = createBrowserRouter([
   }
 ])
 
+
+
 ReactDOM.createRoot(document.getElementById('root')).render(
 
-  <Provider store={store}>
-    <React.StrictMode>
+  <React.StrictMode>
+    <Provider store={store}>
       <ThemeProvider>
         <RouterProvider router={router} />
       </ThemeProvider>
-    </React.StrictMode>
-  </Provider>
+    </Provider>
+  </React.StrictMode>
 )

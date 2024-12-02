@@ -9,14 +9,23 @@ import {
     DropdownMenuTrigger,
 } from './ui/dropdown-menu'
 import { useTheme } from '../components/theme-provider'
-import { ArrowUp, CircleUser, Dock, LogOut, LucideBell, Moon, Settings, Sun, User, Video } from 'lucide-react'
+import { Dock, LogOut, LucideBell, Moon, Settings, Sun, User, Video } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 import { logout } from '../store/authSlice'
 import { Link } from 'react-router-dom'
-
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from './ui/tooltip'
+import FileUpload from './FileUpload'
+import Modal from './Modal'
+import { Button } from './ui/button'
+import { Label } from './ui/label'
 
 
 const Header = () => {
@@ -38,8 +47,16 @@ const Header = () => {
         return;
     }
 
+    const handleUpload = async () => {
+        try {
+            axios.post()
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     // Handle Logout
-    const handleLogout = useCallback (async()=> {
+    const handleLogout = useCallback(async () => {
         try {
             const response = await axios.post('http://localhost:8000/api/v1/users/logout', {}, {
                 headers: {
@@ -47,15 +64,15 @@ const Header = () => {
                 }
             })
 
-            if(!response) toast.error('Something wrong while logout')
-            
+            if (!response) toast.error('Something wrong while logout')
+
             toast.success(response.data.message)
 
             dispatch(logout())
-            
+
         } catch (error) {
             console.log(error)
-            
+
         }
     }, [dispatch])
 
@@ -89,21 +106,65 @@ const Header = () => {
                     <div className='flex justify-between items-center gap-3'>
 
                         <div
-                            className={`hover:bg-slate-200 dark:hover:bg-slate-900 hover:transition-all p-2 rounded-full flex items-center cursor-pointer transition-transform duration-500
+                            className={` hover:transition-all p-2 rounded-full flex items-center cursor-pointer transition-transform duration-500
                             ${dark ? 'rotate-180' : 'rotate-0'}`
                             }
                             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
-                            {dark ? <Sun className='h-5 w-5 text-yellow-500 rotate-0 transition-all' />
+                            {dark
+                                ?
+                                <>
+                                    <Sun className='h-5 w-5 text-yellow-500 rotate-0 transition-all' />
+                                </>
                                 :
-                                <Moon className='h-5 w-5 text-blue-500 rotate-0 transition-all' />
+                                <>
+
+                                    <Moon className='h-5 w-5 text-blue-500 rotate-0 transition-all' />
+
+                                </>
                             }
 
                         </div>
-                        <div className='dark:hover:bg-slate-900  hover:bg-slate-200 transition-colors cursor-pointer p-2 rounded-full'>
-                            <Video className='h-5 w-5 dark:text-gray-300 ' />
+                        <div className=' transition-colors cursor-pointer p-2 rounded-full'>
+                            <TooltipProvider>
+
+                                <Tooltip>
+                                    <TooltipTrigger>
+
+                                        {/* TODO: */}
+                                        <Modal
+                                            trigger={<Video className='h-5 w-5 dark:text-gray-300 ' />}
+                                            title={'Upload your content !'}
+                                        >
+                                            <div className='flex flex-col gap-3'>
+                                                <Label>Video</Label>
+                                                <FileUpload height={`h-22`}/>
+                                                <Label>Thumbnail</Label>
+                                                <FileUpload/>
+                                                <Button className='w-full'>Publish</Button>
+                                            </div>
+                                        </Modal>
+
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        Upload
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+
                         </div>
-                        <div className='dark:hover:bg-slate-900 hover:bg-slate-200 transition-colors  cursor-pointer p-2 rounded-full'>
-                            <LucideBell className='h-5 w-5 dark:text-gray-300 ' />
+                        <div className=' transition-colors  cursor-pointer p-2 rounded-full'>
+                            <TooltipProvider>
+
+                                <Tooltip>
+                                    <TooltipTrigger>
+
+                                        <LucideBell className='h-5 w-5 dark:text-gray-300 ' />
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        Notification
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
                         </div>
                         <div className='pt-2 transition-colors  cursor-pointer rounded-full'>
 
