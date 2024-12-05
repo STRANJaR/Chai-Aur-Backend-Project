@@ -17,6 +17,8 @@ const uploadVideo = asyncHandler( async(req, res) => {
     // step 8: return response 
 
     const { title, description, views } = req.body;
+    console.log('title server: ', title)
+    console.log('desc server: ', description)
     const  videoLocalPath  = req.files?.videoFile[0]?.path;
     const  thumbnailLocalPath = req.files?.thumbnail[0]?.path;
 
@@ -24,6 +26,7 @@ const uploadVideo = asyncHandler( async(req, res) => {
     if(!thumbnailLocalPath) throw new ApiError(400, "Invalid url of thumbnail")
 
     const videoFile = await uploadOnCloudinary(videoLocalPath)
+    // TODO: work on thumbnail upload 
     const thumbnail = await uploadOnCloudinary(thumbnailLocalPath)
 
     if(!videoFile) throw new ApiError(400, "Faild to upload video on cloudinary")

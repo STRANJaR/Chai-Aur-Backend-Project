@@ -15,6 +15,7 @@ router.route("/").post(verifyJWT,upload.fields
             name: "videoFile",
             maxCount: 1
         },
+        // TODO: work on thumbnail upload along with video 
         {
             name: "thumbnail",
             maxCount: 1
