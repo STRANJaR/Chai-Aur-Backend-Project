@@ -14,6 +14,7 @@ import PublicRoute from './components/AuthLayout/PublicRoute.jsx'
 import Profile from './components/User/Profile.jsx'
 import ForgotPassword from './components/ForgotPassword.jsx'
 import UpdateAccountDetails from './components/User/UpdateAccountDetails.jsx'
+import NotFound from './components/NotFoundPage/NotFound.jsx'
 
 
 
@@ -67,6 +68,12 @@ const router = createBrowserRouter([
           <PrivateRoute>
             <Profile/>
           </PrivateRoute>
+        )
+      },
+      {
+        path: '*',
+        element: (
+            <NotFound/>
         )
       }
     ]

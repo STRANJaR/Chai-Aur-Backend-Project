@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Input } from '../ui/input'
 import { useForm } from 'react-hook-form'
 import { Button } from '../ui/button'
-import { Loader2, PencilLine } from 'lucide-react'
+import { ArrowLeftCircle, Loader2, PencilLine } from 'lucide-react'
 import { Separator } from '../ui/separator'
 import FileUpload from '../FileUpload'
 import { useSelector, useDispatch } from 'react-redux'
 import axios from 'axios'
 import { toast, ToastContainer } from 'react-toastify'
-import { setCredentials } from '../../store/authSlice'
+import store from '../../store/store'
+import { Link } from 'react-router-dom'
 
 
 const UpdateAccountDetails = () => {
@@ -29,7 +30,7 @@ const UpdateAccountDetails = () => {
 
 
     // Personal detail update
-    const personalDetailChange = async (payload) => {
+    const personalDetailChange = useCallback(async (payload) => {
         console.log('payload: ', payload)
         setIsPersonalLoading(true);
 
@@ -56,6 +57,9 @@ const UpdateAccountDetails = () => {
 
             console.log(response)
             toast.success(response.data.message)
+
+            // save fresh user object in local storage 
+            localStorage.setItem('user', JSON.stringify(response.data.data))
         } catch (error) {
             console.log(error.data)
             toast.error('opps')
@@ -63,7 +67,7 @@ const UpdateAccountDetails = () => {
         }
 
         setIsPersonalLoading(false)
-    }
+    }, [store, user])
 
 
     // Update profile picture
@@ -139,15 +143,35 @@ const UpdateAccountDetails = () => {
         setCoverImageLoading(false)
     }
 
-
+    useEffect(() => { }, [user, personalDetailChange])
     return (
         <>
             <section className='h-screen w-full text-xs'>
                 <div className='grid grid-cols-3'>
                     <div className='h-screen w-full col-span-1 border-r-2'>
+                        <span className='relative top-5 left-5'>
+                            <Link to={'/u'}>
+                                <ArrowLeftCircle className='h-5 w-5 text-gray-300' />
+                            </Link>
+                        </span>
+                        <div className='flex flex-col gap-3 justify-center items-center relative top-20 left-[15%] h-auto w-[70%]  p-5'>
+                            <div className='rounded-full border-2 border-gray-300'>
+                                <img
+                                    className='h-24 w-24 rounded-full'
+                                    src={user.avatar || ''}
+                                    alt="avatar"
+                                />
+                            </div>
+
+                            <div className='flex flex-col justify-center items-center'>
+                                <span className='text-2xl font-bold'>{user.fullName || ''}</span>
+                                <span className='text-sm'>{user.email || ''}</span>
+                                <Link to={'/forgot-password'} className='text-sm text-blue-500 hover:text-blue-700'>{'change password'}</Link>
+                            </div>
+                        </div>
+                        {/* <Separator /> */}
 
                     </div>
-                    {/* <Separator/> */}
 
                     <div className='h-screen w-full col-span-2 '>
 
@@ -212,7 +236,7 @@ const UpdateAccountDetails = () => {
 
                                         <FileUpload
 
-                                            handleChange={e => setCoverImage(e.target.files[0])} />
+                                            handleChange={e => setAvatarFile(e.target.files[0])} />
                                         <Button
                                             className='w-full'
                                             type='submit'>
@@ -242,7 +266,7 @@ const UpdateAccountDetails = () => {
                                         </div>
 
                                         <FileUpload
-                                            handleChange={handleAvatarChange} />
+                                            handleChange={e => setCoverImage(e.target.files[0])} />
                                         <Button
                                             className='w-full'
                                             type='submit'>

@@ -4,7 +4,7 @@ import { Separator } from '../ui/separator'
 import dateFormate from 'dateformat'
 import { Button } from 'flowbite-react'
 import { Link } from 'react-router-dom'
-import { AtSign, CalendarDays, PenLineIcon } from 'lucide-react'
+import { ArrowLeftCircle, AtSign, CalendarDays, PenLineIcon } from 'lucide-react'
 
 
 const Profile = () => {
@@ -16,7 +16,13 @@ const Profile = () => {
         <>
 
             <main className='h-screen w-full'>
+                
                 <section className='h-full w-full'>
+                <span className='absolute top-5 left-5'>
+                            <Link to={'/dashboard'}>
+                                <ArrowLeftCircle className='h-5 w-5 text-gray-300' />
+                            </Link>
+                        </span>
                     <div className='h-[60%]'>
 
                         {/* <Link className='text-right bg-blue-600 px-2 py-1'>

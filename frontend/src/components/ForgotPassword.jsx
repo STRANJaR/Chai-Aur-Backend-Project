@@ -3,7 +3,7 @@ import { Card } from './ui/card'
 import { Input } from './ui/input'
 import { useForm } from 'react-hook-form'
 import { Button } from './ui/button'
-import { ArrowLeftCircleIcon, Loader2 } from 'lucide-react'
+import { ArrowLeftCircleIcon, FingerprintIcon, Loader2 } from 'lucide-react'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import { Link, redirect } from 'react-router-dom'
@@ -62,7 +62,7 @@ const ForgotPassword = () => {
 
                             <span className='text-sm text-gray-300'>
                                 <Link
-                                    to={'/u'}
+                                    to={'/update-account'}
                                 >
                                     <ArrowLeftCircleIcon className='h-5 w-5' />
                                 </Link>
@@ -80,7 +80,13 @@ const ForgotPassword = () => {
             <Card className='h-72 w-[50%] relative top-20 left-[25%]'>
 
                 {/* Back to home  */}
-                <div className='h-full relative top-[20%] left-24 w-[70%]'>
+                <div className='h-full flex flex-col gap-4 relative top-[20%] left-24 w-[70%]'>
+                
+                <span className='flex flex-row justify-center items-center gap-3'>
+
+                 <FingerprintIcon className='text-green-500'/>
+                 <p className='font-semibold'>Secured </p>
+                </span>
 
                     <form onSubmit={handleSubmit(handleUpdatePassword)}>
                         <div className='flex flex-col justify-center items-center gap-3'>
@@ -115,7 +121,7 @@ const ForgotPassword = () => {
             </Card>
 
             <ToastContainer
-                theme='light'
+                theme='dark'
             />
         </div>
     )
