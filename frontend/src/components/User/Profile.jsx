@@ -48,20 +48,20 @@ const Profile = () => {
 
 
                                         <span className='text-sm text-gray-300 flex flex-row gap-2 items-center'>
-                                            <AtSign className='h-4 w-4'/> {`${user.username}`}
+                                            <AtSign className='h-4 w-4' /> {`${user.username}`}
                                         </span>
 
                                         <span className='text-sm text-gray-300 flex flex-row items-center gap-2'>
                                             <CalendarDays className='h-4 w-4' /> {`Joined ${dateFormate(user.createdAt, "mmmm, dS, yyyy")}`}
                                         </span>
                                         <span className='text-sm text-gray-300 flex flex-row items-center gap-2'>
-                                            <PenLineIcon className='h-4 w-4'/>
-                                             <Link 
-                                             to={'/forgot-password'}
-                                             className='hover:text-blue-500'
-                                             > Update account details</Link>
+                                            <PenLineIcon className='h-4 w-4' />
+                                            <Link
+                                                to={'/update-account'}
+                                                className='hover:text-blue-500'
+                                            > Update account details</Link>
                                         </span>
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -69,10 +69,7 @@ const Profile = () => {
 
                     </div>
                     <Separator />
-                    <div>
-                <Button>Flow Bite</Button>
-
-                    </div>
+                   
                 </section>
             </main>
         </>

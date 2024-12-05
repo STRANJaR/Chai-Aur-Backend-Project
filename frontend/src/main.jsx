@@ -13,6 +13,7 @@ import PrivateRoute from './components/AuthLayout/PrivateRoute.jsx'
 import PublicRoute from './components/AuthLayout/PublicRoute.jsx'
 import Profile from './components/User/Profile.jsx'
 import ForgotPassword from './components/ForgotPassword.jsx'
+import UpdateAccountDetails from './components/User/UpdateAccountDetails.jsx'
 
 
 
@@ -42,6 +43,14 @@ const router = createBrowserRouter([
           <PublicRoute>
             <Login/>
           </PublicRoute>
+        )
+      },
+      {
+        path: '/update-account',
+        element: (
+          <PrivateRoute>
+            <UpdateAccountDetails/>
+          </PrivateRoute>
         )
       },
       {
