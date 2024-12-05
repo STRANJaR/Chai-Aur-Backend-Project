@@ -102,11 +102,12 @@ const Login = () => {
                   />
 
                   <Input
-                    className='bg-transparent border border-gray-500 outline-none mb-5 '
+                    className='bg-transparent border border-gray-500 outline-none  '
                     placeholder='Password'
                     type='password'
                     {...register('password', { required: true })}
                   />
+                  <Link to={'/forgot-password'}>Forgot password?</Link>
 
                 </main>
 

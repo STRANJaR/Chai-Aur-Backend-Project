@@ -12,6 +12,7 @@ import store from './store/store.js'
 import PrivateRoute from './components/AuthLayout/PrivateRoute.jsx'
 import PublicRoute from './components/AuthLayout/PublicRoute.jsx'
 import Profile from './components/User/Profile.jsx'
+import ForgotPassword from './components/ForgotPassword.jsx'
 
 
 
@@ -41,6 +42,14 @@ const router = createBrowserRouter([
           <PublicRoute>
             <Login/>
           </PublicRoute>
+        )
+      },
+      {
+        path: '/forgot-password',
+        element: (
+          <PrivateRoute>
+            <ForgotPassword/>
+          </PrivateRoute>
         )
       },
       {

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import {
     DropdownMenu,
@@ -22,13 +22,27 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from './ui/tooltip'
-import FileUpload from './FileUpload'
 import Modal from './Modal'
 import { Button } from './ui/button'
 import { Label } from './ui/label'
+import { Input } from './ui/input'
+import { Textarea } from "./ui/textarea"
+import { Checkbox } from "./ui/checkbox"
+
+
 
 
 const Header = () => {
+
+    const [videoFile, setVideoFile] = useState(null)
+    const [thumbnailFile, setThumbnailFile] = useState(null)
+    const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('')
+
+    console.log('video: ', videoFile)
+    console.log('thumbnail: ', thumbnailFile);
+
+
 
     const dispatch = useDispatch()
 
@@ -47,9 +61,33 @@ const Header = () => {
         return;
     }
 
-    const handleUpload = async () => {
+    const handleUpload = async (payload) => {
+        const formData = new FormData();
+        formData.append('videoTitle', payload.videoTitle)
+        formData.append('videoDescription', payload.videoDescription)
+        if(videoFile) formData.append('videoFile', videoFile)
+        if(thumbnailFile) formData.append('thumbnailFile', thumbnailFile)
+
         try {
-            axios.post()
+            const response = await axios.post('http://localhost:8000/api/v1/video/',
+                {
+                    videoFile: formData?.get('videoFile'),
+                    thumbnail: formData?.get('thumbnailFile'),
+                    title: formData.get('videoTitle'),
+                    description: formData.get('videoDescription'),
+                    isPublished: false
+                },
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                        "Authorization": `Bearer ${token}`
+                    }
+                }
+            );
+
+            if(!response) toast.error('Video not uploaded !')
+            toast.success(response.data.message)
+            console.log(response.data)
         } catch (error) {
             console.log(error)
         }
@@ -130,19 +168,62 @@ const Header = () => {
                                 <Tooltip>
                                     <TooltipTrigger>
 
-                                        {/* TODO: */}
+                                        {/* TODO: Upload video modal with api integration*/}
+
+                                        <form onSubmit={handleSubmit(handleUpload)}>
+
                                         <Modal
                                             trigger={<Video className='h-5 w-5 dark:text-gray-300 ' />}
                                             title={'Upload your content !'}
                                         >
                                             <div className='flex flex-col gap-3'>
+
+                                                <Label>Title</Label>
+                                                <Input
+                                                    type='text'
+                                                    {...register('videoTitle', {required: true})}
+                                                />
+
+                                                <Label>Description</Label>
+                                                <Textarea
+                                                   {...register('videoDescription', {required: true})}
+                                                />
+
+
+
                                                 <Label>Video</Label>
-                                                <FileUpload height={`h-22`}/>
+                                                <Input
+                                                    className="block w-full  text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-300  dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                                    type="file"
+                                                    onChange={(e) => setVideoFile(e.target.files[0])}
+                                                />
                                                 <Label>Thumbnail</Label>
-                                                <FileUpload/>
-                                                <Button className='w-full'>Publish</Button>
+                                                <Input
+                                                className="block w-full  text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-300  dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                                    type="file"
+                                                    onChange={(e) => setThumbnailFile(e.target.files[0])}
+                                                />
+                                                <div className="flex items-center space-x-2">
+                                                    <Checkbox id="terms" />
+                                                    <label
+                                                        htmlFor="terms"
+                                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                    >
+                                                        Want to publish ?
+                                                    </label>
+                                                </div>
+
+                                                <Button
+                                                    className='w-full'
+                                                    onClick={handleUpload}
+                                                >
+                                                    Publish
+                                                </Button>
+
+
                                             </div>
                                         </Modal>
+                                        </form>
 
                                     </TooltipTrigger>
                                     <TooltipContent>

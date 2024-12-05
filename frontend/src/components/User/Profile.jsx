@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux'
 import { Separator } from '../ui/separator'
 import dateFormate from 'dateformat'
 import { Button } from 'flowbite-react'
+import { Link } from 'react-router-dom'
+import { AtSign, CalendarDays, PenLineIcon } from 'lucide-react'
 
 
 const Profile = () => {
@@ -15,8 +17,13 @@ const Profile = () => {
 
             <main className='h-screen w-full'>
                 <section className='h-full w-full'>
-                    <div className='h-[50%]'>
-                        <div className=' h-full w-[70%] p-4 relative top-0 left-[15%]'>
+                    <div className='h-[60%]'>
+
+                        {/* <Link className='text-right bg-blue-600 px-2 py-1'>
+                            Change Passowrd
+                        </Link> */}
+
+                        <div className=' h-full w-[70%] p-4 relative top-0 left-[15%] '>
                             <div className=' bg-black rounded-md h-[60%] w-[70%] overflow-hidden relative left-[15%]'>
                                 <img
                                     className='w-full h-full object-cover object-center'
@@ -38,8 +45,23 @@ const Profile = () => {
 
                                         <span className='text-3xl font-bold'>{user.fullName}</span>
                                         <Separator />
-                                        <span className='text-sm text-gray-300'>{`@${user.username}`}</span>
-                                        <span className='text-sm text-gray-300'>{`Joined ${dateFormate(user.createdAt, "mmmm, dS, yyyy")}`}</span>
+
+
+                                        <span className='text-sm text-gray-300 flex flex-row gap-2 items-center'>
+                                            <AtSign className='h-4 w-4'/> {`${user.username}`}
+                                        </span>
+
+                                        <span className='text-sm text-gray-300 flex flex-row items-center gap-2'>
+                                            <CalendarDays className='h-4 w-4' /> {`Joined ${dateFormate(user.createdAt, "mmmm, dS, yyyy")}`}
+                                        </span>
+                                        <span className='text-sm text-gray-300 flex flex-row items-center gap-2'>
+                                            <PenLineIcon className='h-4 w-4'/>
+                                             <Link 
+                                             to={'/forgot-password'}
+                                             className='hover:text-blue-500'
+                                             > Update account details</Link>
+                                        </span>
+                                        
                                     </div>
                                 </div>
                             </div>

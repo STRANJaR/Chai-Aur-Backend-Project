@@ -2,7 +2,7 @@ import React from 'react'
 
 import { FileInput, Label } from "flowbite-react";
 
-const FileUpload = ({height}) => {
+const FileUpload = ({height, handleChange}) => {
     return (
         <div className="flex w-full items-center justify-center">
             <Label
@@ -28,9 +28,9 @@ const FileUpload = ({height}) => {
                     <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
                         <span className="font-semibold">Click to upload</span> or drag and drop
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                    {/* <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p> */}
                 </div>
-                <FileInput id="dropzone-file" className="hidden" />
+                <FileInput onChange={handleChange} id="dropzone-file" className="hidden" />
             </Label>
         </div>
     )
