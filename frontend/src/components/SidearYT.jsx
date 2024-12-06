@@ -17,6 +17,7 @@ import {
 /// Flowbite ui
 import { Sidebar } from "flowbite-react";
 import { Separator } from './ui/separator';
+import { Link } from 'react-router-dom';
 
 const SidearYT = () => {
     return (
@@ -111,9 +112,11 @@ const SidearYT = () => {
                         Shorts
                     </Sidebar.Item>
                     <Separator />
-                    <Sidebar.Item href="#" icon={History}>
-                        History
-                    </Sidebar.Item>
+                    <Link to={'/watch-history'}>
+                        <Sidebar.Item icon={History}>
+                            History
+                        </Sidebar.Item>
+                    </Link>
                     <Sidebar.Item href="#" icon={ListVideo}>
                         Playlists
                     </Sidebar.Item>

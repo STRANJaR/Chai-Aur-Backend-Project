@@ -15,18 +15,21 @@ import Profile from './components/User/Profile.jsx'
 import ForgotPassword from './components/ForgotPassword.jsx'
 import UpdateAccountDetails from './components/User/UpdateAccountDetails.jsx'
 import NotFound from './components/NotFoundPage/NotFound.jsx'
+import WatchHistory from './components/User/WatchHistory.jsx'
+import Layout from './components/Layout.jsx'
 
 
 
 const router = createBrowserRouter([
   {
     path: '/',
+    element: <Layout/>,
     children: [
       {
         path: '/dashboard',
         element: (
           <PrivateRoute>
-            <App/>
+            <App />
           </PrivateRoute>
         )
       },
@@ -34,7 +37,7 @@ const router = createBrowserRouter([
         path: '/register',
         element: (
           <PublicRoute>
-            <Register/>
+            <Register />
           </PublicRoute>
         )
       },
@@ -42,7 +45,7 @@ const router = createBrowserRouter([
         path: '/login',
         element: (
           <PublicRoute>
-            <Login/>
+            <Login />
           </PublicRoute>
         )
       },
@@ -50,7 +53,7 @@ const router = createBrowserRouter([
         path: '/update-account',
         element: (
           <PrivateRoute>
-            <UpdateAccountDetails/>
+            <UpdateAccountDetails />
           </PrivateRoute>
         )
       },
@@ -58,7 +61,7 @@ const router = createBrowserRouter([
         path: '/forgot-password',
         element: (
           <PrivateRoute>
-            <ForgotPassword/>
+            <ForgotPassword />
           </PrivateRoute>
         )
       },
@@ -66,14 +69,22 @@ const router = createBrowserRouter([
         path: '/u',
         element: (
           <PrivateRoute>
-            <Profile/>
+            <Profile />
+          </PrivateRoute>
+        )
+      },
+      {
+        path: '/watch-history',
+        element: (
+          <PrivateRoute>
+            <WatchHistory />
           </PrivateRoute>
         )
       },
       {
         path: '*',
         element: (
-            <NotFound/>
+          <NotFound />
         )
       }
     ]
@@ -85,10 +96,12 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
 
   <React.StrictMode>
-    <Provider store={store}>
-      <ThemeProvider>
-        <RouterProvider router={router} />
-      </ThemeProvider>
-    </Provider>
+      <Provider store={store}>
+        <ThemeProvider>
+    
+          <RouterProvider router={router} />
+ 
+        </ThemeProvider>
+      </Provider>
   </React.StrictMode>
 )
