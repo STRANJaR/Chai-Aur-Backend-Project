@@ -17,6 +17,7 @@ import UpdateAccountDetails from './components/User/UpdateAccountDetails.jsx'
 import NotFound from './components/NotFoundPage/NotFound.jsx'
 import WatchHistory from './components/User/WatchHistory.jsx'
 import Layout from './components/Layout.jsx'
+import Home from './components/Home.jsx'
 
 
 
@@ -25,11 +26,19 @@ const router = createBrowserRouter([
     path: '/',
     element: <Layout/>,
     children: [
+      // {
+      //   path: '/dashboard',
+      //   element: (
+      //     <PrivateRoute>
+      //       <App />
+      //     </PrivateRoute>
+      //   )
+      // },
       {
         path: '/dashboard',
         element: (
           <PrivateRoute>
-            <App />
+            <Home/>
           </PrivateRoute>
         )
       },

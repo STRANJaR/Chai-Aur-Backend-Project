@@ -18,7 +18,7 @@ const VideoCard = ({thumbnail, avatarImage, videoTitle, channelName, videoViews,
     return (
         <div>
             <Card className='w-80 h-72 p-2 flex flex-col gap-3 cursor-pointer dark:hover:shadow-slate-900 hover:shadow-md  transition-all'>
-                <div className='rounded-md bg-slate-400  h-44 w-full'>
+                <div className='rounded-md bg-slate-400 overflow-hidden  h-44 w-full'>
                     <img
                         className='rounded-md object-contain'
                         src={thumbnail} alt="video thumbnail" />

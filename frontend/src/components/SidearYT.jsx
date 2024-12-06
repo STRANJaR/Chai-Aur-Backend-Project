@@ -102,9 +102,11 @@ const SidearYT = () => {
         <Sidebar className='text-sm'>
             <Sidebar.Items>
                 <Sidebar.ItemGroup>
-                    <Sidebar.Item href="#" icon={Home}>
-                        Home
-                    </Sidebar.Item>
+                    <Link to={'/dashboard'}>
+                        <Sidebar.Item icon={Home}>
+                            Home
+                        </Sidebar.Item>
+                    </Link>
                     <Sidebar.Item href="#" icon={Dock}>
                         Subscription
                     </Sidebar.Item>
