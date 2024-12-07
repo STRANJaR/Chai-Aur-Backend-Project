@@ -148,5 +148,6 @@ const getAllVideos = asyncHandler( async(req, res) => {
 export {
     uploadVideo,
     deleteVideo,
-    updateVideo
+    updateVideo,
+    getAllVideos
 }
