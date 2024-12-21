@@ -145,9 +145,22 @@ const getAllVideos = asyncHandler( async(req, res) => {
     .json( new ApiResponse(200, allVideos, "Videos fetched successfully"))
 })
 
+
+const getSingleVideo = asyncHandler(async(req, res)=> {
+    const {id} = req.body;
+
+    const singleVideo = await Video.findById(id)
+
+    if(!singleVideo) throw new ApiResponse(404, {}, 'video not found' )
+    
+    return res
+    .status(200)
+    .json(new ApiResponse(200, singleVideo, 'video fetched successfully'))
+})
 export {
     uploadVideo,
     deleteVideo,
     updateVideo,
-    getAllVideos
+    getAllVideos,
+    getSingleVideo
 }
