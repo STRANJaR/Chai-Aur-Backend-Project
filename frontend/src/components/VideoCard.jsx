@@ -21,7 +21,8 @@ const VideoCard = ({thumbnail, avatarImage, videoTitle, channelName, videoViews,
                 <div className='rounded-md bg-slate-400 overflow-hidden  h-44 w-full'>
                     <img
                         className='rounded-md object-contain'
-                        src={thumbnail} alt="video thumbnail" />
+                        src={thumbnail} alt="video thumbnail" 
+                        />
                 </div>
                 <div>
                     <div className=' flex flex-row justify-between items-center gap-3'>

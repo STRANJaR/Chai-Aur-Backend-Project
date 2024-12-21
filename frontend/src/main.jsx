@@ -18,6 +18,8 @@ import NotFound from './components/NotFoundPage/NotFound.jsx'
 import WatchHistory from './components/User/WatchHistory.jsx'
 import Layout from './components/Layout.jsx'
 import Home from './components/Home.jsx'
+import Watch from './components/Watch.jsx'
+import Dyanamic from './components/Dyanamic.jsx'
 
 
 
@@ -91,11 +93,27 @@ const router = createBrowserRouter([
         )
       },
       {
-        path: '*',
+        path: '/watch/:id',
         element: (
-          <NotFound />
+          <PrivateRoute>
+            <Watch />
+          </PrivateRoute>
         )
-      }
+      },
+      {
+        path: '/dynamic/:id',
+        element: (
+          <PrivateRoute>
+            <Dyanamic />
+          </PrivateRoute>
+        )
+      },
+      // {
+      //   path: '*',
+      //   element: (
+      //     <NotFound />
+      //   )
+      // }
     ]
   }
 ])

@@ -65,8 +65,8 @@ const Header = () => {
         const formData = new FormData();
         formData.append('videoTitle', payload.videoTitle)
         formData.append('videoDescription', payload.videoDescription)
-        if(videoFile) formData.append('videoFile', videoFile)
-        if(thumbnailFile) formData.append('thumbnailFile', thumbnailFile)
+        if (videoFile) formData.append('videoFile', videoFile)
+        if (thumbnailFile) formData.append('thumbnailFile', thumbnailFile)
 
         try {
             const response = await axios.post('http://localhost:8000/api/v1/video/',
@@ -85,7 +85,7 @@ const Header = () => {
                 }
             );
 
-            if(!response) toast.error('Video not uploaded !')
+            if (!response) toast.error('Video not uploaded !')
             toast.success(response.data.message)
             console.log(response.data)
         } catch (error) {
@@ -172,57 +172,57 @@ const Header = () => {
 
                                         <form onSubmit={handleSubmit(handleUpload)}>
 
-                                        <Modal
-                                            trigger={<Video className='h-5 w-5 dark:text-gray-300 ' />}
-                                            title={'Upload your content !'}
-                                        >
-                                            <div className='flex flex-col gap-3'>
+                                            <Modal
+                                                trigger={<Video className='h-5 w-5 dark:text-gray-300 ' />}
+                                                title={'Upload your content !'}
+                                            >
+                                                <div className='flex flex-col gap-3'>
 
-                                                <Label>Title</Label>
-                                                <Input
-                                                    type='text'
-                                                    {...register('videoTitle', {required: true})}
-                                                />
+                                                    <Label>Title</Label>
+                                                    <Input
+                                                        type='text'
+                                                        {...register('videoTitle', { required: true })}
+                                                    />
 
-                                                <Label>Description</Label>
-                                                <Textarea
-                                                   {...register('videoDescription', {required: true})}
-                                                />
+                                                    <Label>Description</Label>
+                                                    <Textarea
+                                                        {...register('videoDescription', { required: true })}
+                                                    />
 
 
 
-                                                <Label>Video</Label>
-                                                <Input
-                                                    className="block w-full  text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-300  dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                                    type="file"
-                                                    onChange={(e) => setVideoFile(e.target.files[0])}
-                                                />
-                                                <Label>Thumbnail</Label>
-                                                <Input
-                                                className="block w-full  text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-300  dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                                    type="file"
-                                                    onChange={(e) => setThumbnailFile(e.target.files[0])}
-                                                />
-                                                <div className="flex items-center space-x-2">
-                                                    <Checkbox id="terms" />
-                                                    <label
-                                                        htmlFor="terms"
-                                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                    <Label>Video</Label>
+                                                    <Input
+                                                        className="block w-full  text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-300  dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                                        type="file"
+                                                        onChange={(e) => setVideoFile(e.target.files[0])}
+                                                    />
+                                                    <Label>Thumbnail</Label>
+                                                    <Input
+                                                        className="block w-full  text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-300  dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                                        type="file"
+                                                        onChange={(e) => setThumbnailFile(e.target.files[0])}
+                                                    />
+                                                    <div className="flex items-center space-x-2">
+                                                        <Checkbox id="terms" />
+                                                        <label
+                                                            htmlFor="terms"
+                                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                        >
+                                                            Want to publish ?
+                                                        </label>
+                                                    </div>
+
+                                                    <Button
+                                                        className='w-full'
+                                                        onClick={handleUpload}
                                                     >
-                                                        Want to publish ?
-                                                    </label>
+                                                        Publish
+                                                    </Button>
+
+
                                                 </div>
-
-                                                <Button
-                                                    className='w-full'
-                                                    onClick={handleUpload}
-                                                >
-                                                    Publish
-                                                </Button>
-
-
-                                            </div>
-                                        </Modal>
+                                            </Modal>
                                         </form>
 
                                     </TooltipTrigger>
@@ -253,7 +253,7 @@ const Header = () => {
                             <DropdownMenu>
                                 <DropdownMenuTrigger>
                                     <Avatar className='h-8 w-8'>
-                                        <AvatarImage src={user.avatar} />
+                                        <AvatarImage src={user?.avatar} />
                                         <AvatarFallback>
                                             Me
                                         </AvatarFallback>
