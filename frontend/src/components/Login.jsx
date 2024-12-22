@@ -17,8 +17,14 @@ import { useDispatch } from 'react-redux'
 import { setCredentials } from '../store/authSlice'
 
 
+import { useAuth0 } from "@auth0/auth0-react";
+
 
 const Login = () => {
+
+  // FEATURE: save user info redux store...
+  const { user, loginWithRedirect } = useAuth0()
+  console.log(user)
 
   const [loading, setLoading] = useState(false)
   const { register, handleSubmit, reset } = useForm()
@@ -44,6 +50,7 @@ const Login = () => {
       if (user) {
         setLoading(false)
         toast.success(user.data.message)
+        console.log(user.data.data)
         dispatch(setCredentials(user.data.data))
 
         // clear form fields
@@ -88,6 +95,16 @@ const Login = () => {
                 </CardDescription>
               </CardHeader>
 
+              {/* FEATURE: OAuth centric integration*/}
+              <div className='py-4 w-full'>
+
+                <Button
+                  className='w-full'
+                  onClick={()=> loginWithRedirect()}
+                >
+                  Login with OAuth
+                </Button>
+              </div>
               <form onSubmit={handleSubmit(handleLogin)}>
 
                 <main className='flex flex-col gap-3'>

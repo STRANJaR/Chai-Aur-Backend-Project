@@ -29,11 +29,14 @@ import { Input } from './ui/input'
 import { Textarea } from "./ui/textarea"
 import { Checkbox } from "./ui/checkbox"
 
+import { useAuth0 } from '@auth0/auth0-react'
+
 
 
 
 const Header = () => {
 
+    const { logout } = useAuth0();
     const [videoFile, setVideoFile] = useState(null)
     const [thumbnailFile, setThumbnailFile] = useState(null)
     const [title, setTitle] = useState('')
@@ -106,7 +109,10 @@ const Header = () => {
 
             toast.success(response.data.message)
 
+            logout()
             dispatch(logout())
+
+
 
         } catch (error) {
             console.log(error)

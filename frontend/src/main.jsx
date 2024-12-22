@@ -20,13 +20,16 @@ import Layout from './components/Layout.jsx'
 import Home from './components/Home.jsx'
 import Watch from './components/Watch.jsx'
 import Dyanamic from './components/Dyanamic.jsx'
+import { Auth0Provider } from '@auth0/auth0-react'
+
+
 
 
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Layout/>,
+    element: <Layout />,
     children: [
       // {
       //   path: '/dashboard',
@@ -40,7 +43,7 @@ const router = createBrowserRouter([
         path: '/dashboard',
         element: (
           <PrivateRoute>
-            <Home/>
+            <Home />
           </PrivateRoute>
         )
       },
@@ -123,12 +126,21 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
 
   <React.StrictMode>
+    <Auth0Provider
+      domain="dev-40d78xpq4u26l8lc.us.auth0.com"
+      clientId="QHLwb5dqh9ccNOWAarulBwjBBnxIwv35"
+      authorizationParams={{
+        redirect_uri: window.location.origin
+      }}
+    >
+
       <Provider store={store}>
         <ThemeProvider>
-    
+
           <RouterProvider router={router} />
- 
+
         </ThemeProvider>
       </Provider>
+    </Auth0Provider>
   </React.StrictMode>
 )

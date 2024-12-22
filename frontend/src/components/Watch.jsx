@@ -3,8 +3,11 @@ import { useParams } from 'react-router-dom'
 import ReactPlayer from 'react-player/lazy'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
+import { useAuth0 } from '@auth0/auth0-react'
 
 const Watch = () => {
+    const {user} = useAuth0()
+    console.log(user)
 
     const { id } = useParams()
     console.log('url:', id)
