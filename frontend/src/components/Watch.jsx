@@ -65,14 +65,18 @@ const Watch = () => {
                         url={video.videoFile}
                         volume={1}
                         playbackRate={1}
+                        loop={true}
                     />
                 </div>
 
 
                 <section className='p-3'>
+                    <div className='w-[70%]'>
+
                     <h1 className='font-semibold text-xl'>
                         {video?.title || null}
                     </h1>
+                    </div>
 
                     <div className='w-[70%]'>
                         <div className='flex flex-row justify-between items-center'>

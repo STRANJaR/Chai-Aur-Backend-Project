@@ -10,7 +10,7 @@ const PrivateRoute = ({ children }) => {
 
     const isAuthenticatedTraditional = useSelector(state => state.auth.isAuthenticated)
 
-    return (isAuthenticatedTraditional && isAuthenticated) ? children : <Navigate to={'/login'} />
+    return (isAuthenticatedTraditional || isAuthenticated) ? children : <Navigate to={'/login'} />
 }
 
 export default PrivateRoute

@@ -52,6 +52,8 @@ const Home = () => {
                 thumbnail={video.thumbnail}
                 videoViews={video.views}
                 uploadTime={video.createdAt}
+                videoTitle={video.title}
+                
               />
 
             </div>

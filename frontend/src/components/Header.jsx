@@ -9,10 +9,10 @@ import {
     DropdownMenuTrigger,
 } from './ui/dropdown-menu'
 import { useTheme } from '../components/theme-provider'
-import { Dock, LogOut, LucideBell, Moon, Settings, Sun, User, Video } from 'lucide-react'
+import { Dock, Loader2, LogOut, LucideBell, Moon, Settings, Sun, User, Video } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { useSelector, useDispatch } from 'react-redux'
-import { toast } from 'react-toastify'
+import { toast, ToastContainer } from 'react-toastify'
 import axios from 'axios'
 import { logout } from '../store/authSlice'
 import { Link } from 'react-router-dom'
@@ -37,6 +37,8 @@ import { useAuth0 } from '@auth0/auth0-react'
 const Header = () => {
 
     const { logout } = useAuth0();
+
+    const [loading, setLoading] = useState(false)
     const [videoFile, setVideoFile] = useState(null)
     const [thumbnailFile, setThumbnailFile] = useState(null)
     const [title, setTitle] = useState('')
@@ -63,6 +65,7 @@ const Header = () => {
     }
 
     const handleUpload = async (payload) => {
+        setLoading(true)
         console.log('payload: ',payload.videoTitle)
         console.log('payload: ',payload.videoDescription)
 
@@ -94,7 +97,9 @@ const Header = () => {
             console.log(response.data)
         } catch (error) {
             console.log(error)
+            setLoading(false)
         }
+        setLoading(false)
     }
 
     // Handle Logout
@@ -228,7 +233,9 @@ const Header = () => {
                                                         className='w-full'
                                                         onClick={handleUpload}
                                                     >
-                                                        Publish
+                                                        {
+                                                            loading ? <Loader2 className=' h-4 w-4 animate-spin' /> : "Publish"
+                                                        }
                                                     </Button>
 
 
@@ -298,7 +305,7 @@ const Header = () => {
 
                 </div>
             </div>
-
+                            <ToastContainer/>
         </div>
     )
 }

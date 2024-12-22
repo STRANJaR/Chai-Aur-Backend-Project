@@ -25,7 +25,7 @@ const VideoCard = ({thumbnail, avatarImage, videoTitle, channelName, videoViews,
                         />
                 </div>
                 <div>
-                    <div className=' flex flex-row justify-between items-center gap-3'>
+                    <div className=' flex flex-row justify-start items-center gap-3'>
                         <Avatar>
                             <AvatarImage src="https://github.com/stranjar.png" />
                             <AvatarFallback>CN</AvatarFallback>
