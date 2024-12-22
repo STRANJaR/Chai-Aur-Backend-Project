@@ -15,7 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Loader2 } from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import { setCredentials } from '../store/authSlice'
-
+import { Progress } from './ui/progress'
 
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -23,8 +23,9 @@ import { useAuth0 } from "@auth0/auth0-react";
 const Login = () => {
 
   // FEATURE: save user info redux store...
-  const { user, loginWithRedirect } = useAuth0()
+  const { user, loginWithRedirect, isLoading } = useAuth0()
   console.log(user)
+
 
   const [loading, setLoading] = useState(false)
   const { register, handleSubmit, reset } = useForm()
@@ -73,6 +74,9 @@ const Login = () => {
   // render the page when changes accur
   // React.useEffect(() => { }, [handleLogin, dispatch, navigate])
 
+
+
+  if(isLoading) return <div className='h-screen w-full items-center flex flex-col justify-center   '> <Loader2 className='animate-spin'/> </div>
 
   return (
     <>

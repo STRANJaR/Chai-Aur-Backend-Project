@@ -42,8 +42,6 @@ const Header = () => {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
 
-    console.log('video: ', videoFile)
-    console.log('thumbnail: ', thumbnailFile);
 
 
 
@@ -65,9 +63,12 @@ const Header = () => {
     }
 
     const handleUpload = async (payload) => {
+        console.log('payload: ',payload.videoTitle)
+        console.log('payload: ',payload.videoDescription)
+
         const formData = new FormData();
-        formData.append('videoTitle', payload.videoTitle)
-        formData.append('videoDescription', payload.videoDescription)
+        formData.append('videoTitle', title)
+        formData.append('videoDescription', description)
         if (videoFile) formData.append('videoFile', videoFile)
         if (thumbnailFile) formData.append('thumbnailFile', thumbnailFile)
 
@@ -122,16 +123,19 @@ const Header = () => {
 
     React.useEffect(() => {
         const { unsubscribe } = watch((value) => {
-            console.log(value)
+            // console.log(value)
         })
         return () => unsubscribe()
     }, [watch, dispatch, handleLogout])
     return (
         <div className='shadow-sm border-b-2 h-18'>
-            <div className='flex justify-between p-3'>
+            <div className='flex justify-between items-center p-3'>
 
                 <div>
-                    <img className='' src="./yt-logo.svg" alt="youtube logo" />
+                    <Link to={'/dashboard'}>
+
+                        <img className='w-32 h-8' src="./youtube-logo.svg" alt="youtube logo" />
+                    </Link>
                 </div>
                 <div>
                     <form onSubmit={handleSubmit(handleSearch)}>
@@ -187,12 +191,13 @@ const Header = () => {
                                                     <Label>Title</Label>
                                                     <Input
                                                         type='text'
-                                                        {...register('videoTitle', { required: true })}
+                                                        onChange={(e)=> setTitle(e.target.value)}
                                                     />
 
                                                     <Label>Description</Label>
                                                     <Textarea
-                                                        {...register('videoDescription', { required: true })}
+                                                        onChange={(e)=> setDescription(e.target.value)}
+                                                        // {...register('videoDescription', { required: true })}
                                                     />
 
 
