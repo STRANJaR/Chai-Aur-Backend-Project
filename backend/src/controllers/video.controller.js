@@ -2,6 +2,7 @@ import { Video } from "../models/video.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { uploadOnAWS } from "../utils/awsUploader.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 
@@ -17,24 +18,30 @@ const uploadVideo = asyncHandler(async (req, res) => {
     // step 8: return response 
 
     const { title, description, views } = req.body;
-    console.log('title server: ', title)
-    console.log('desc server: ', description)
+
+
     const videoLocalPath = req.files?.videoFile[0]?.path;
     const thumbnailLocalPath = req.files?.thumbnail[0]?.path;
 
     if (!videoLocalPath) throw new ApiError(400, "Invalid url of video")
     if (!thumbnailLocalPath) throw new ApiError(400, "Invalid url of thumbnail")
 
-    const videoFile = await uploadOnCloudinary(videoLocalPath)
-    // TODO: work on thumbnail upload 
+    // CHECK:  depricate cloudinary for video upload
+    // const videoFile = await uploadOnCloudinary(videoLocalPath)
+
+    // FEATURE: implement aws s3 storage to upload video
+    const videoFile = await uploadOnAWS(videoLocalPath)
+    console.log('videoFileController: ', videoFile)
+
+
     const thumbnail = await uploadOnCloudinary(thumbnailLocalPath)
 
-    if (!videoFile) throw new ApiError(400, "Faild to upload video on cloudinary")
+    if (!videoFile) throw new ApiError(400, "Faild to upload video on AWS")
     if (!thumbnail) throw new ApiError(400, "Faild to upload thumbnail on cloudinary")
 
     const video = await Video.create(
         {
-            videoFile: videoFile.url,
+            videoFile: videoFile.Location,
             thumbnail: thumbnail.url,
             title,
             description,

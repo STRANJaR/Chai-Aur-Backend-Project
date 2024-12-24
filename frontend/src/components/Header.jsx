@@ -14,7 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { useSelector, useDispatch } from 'react-redux'
 import { toast, ToastContainer } from 'react-toastify'
 import axios from 'axios'
-import { logout } from '../store/authSlice'
+import { logout as logoutStore} from '../store/authSlice'
 import { Link } from 'react-router-dom'
 import {
     Tooltip,
@@ -29,14 +29,17 @@ import { Input } from './ui/input'
 import { Textarea } from "./ui/textarea"
 import { Checkbox } from "./ui/checkbox"
 
+// OAuth by okta
 import { useAuth0 } from '@auth0/auth0-react'
-
-
 
 
 const Header = () => {
 
     const { logout } = useAuth0();
+    const dispatch = useDispatch()
+
+    const user = useSelector(state => state.auth.user)
+    const token = useSelector(state => state.auth.token)
 
     const [loading, setLoading] = useState(false)
     const [videoFile, setVideoFile] = useState(null)
@@ -45,13 +48,6 @@ const Header = () => {
     const [description, setDescription] = useState('')
 
 
-
-
-    const dispatch = useDispatch()
-
-    const user = useSelector(state => state.auth.user)
-    const token = useSelector(state => state.auth.token)
-    if (!user) toast.error('Unable to fetch user data')
 
     const { setTheme, theme } = useTheme();
     const dark = theme === 'dark';
@@ -64,6 +60,7 @@ const Header = () => {
         return;
     }
 
+    // Handle video upload 
     const handleUpload = async (payload) => {
         setLoading(true)
         console.log('payload: ',payload.videoTitle)
@@ -102,23 +99,20 @@ const Header = () => {
         setLoading(false)
     }
 
-    // Handle Logout
+    // Handle User Logout
     const handleLogout = useCallback(async () => {
         try {
             const response = await axios.post('http://localhost:8000/api/v1/users/logout', {}, {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
-            })
+            });
 
             if (!response) toast.error('Something wrong while logout')
 
-            toast.success(response.data.message)
-
+            dispatch(logoutStore())
             logout()
-            dispatch(logout())
-
-
+            toast.success(response.data.message)
 
         } catch (error) {
             console.log(error)
@@ -132,6 +126,8 @@ const Header = () => {
         })
         return () => unsubscribe()
     }, [watch, dispatch, handleLogout])
+
+    
     return (
         <div className='shadow-sm border-b-2 h-18'>
             <div className='flex justify-between items-center p-3'>
