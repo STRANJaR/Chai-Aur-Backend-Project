@@ -29,7 +29,7 @@ const uploadOnAWS = async (localFilePath) => {
         const params = {
             Bucket: process.env.AWS_BUCKET_NAME,
             Key: `video/${fileName}`,
-            Body: fileContent
+            Body: fileContent,
         };
 
         const video = await s3.upload(params).promise()
