@@ -33,10 +33,13 @@ const uploadOnAWS = async (localFilePath) => {
         };
 
         const video = await s3.upload(params).promise()
+
+        fs.unlinkSync(localFilePath)
         return video
 
 
     } catch (error) {
+        fs.unlinkSync(localFilePath)
         console.log('Error is aws uploader: ', error)
     }
 
