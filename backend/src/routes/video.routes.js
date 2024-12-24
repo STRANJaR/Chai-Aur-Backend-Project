@@ -8,6 +8,7 @@ import {
     getSingleVideo
 } from "../controllers/video.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
+import { generateAiImage, generateDescriptionForVideo } from "../utils/openaiImageGenerate.js";
 
 const router = Router()
 
@@ -35,6 +36,10 @@ router.route("/update-video/:videoId").patch(verifyJWT, upload.fields([
 
 router.route("/get-all-videos").get(verifyJWT, getAllVideos)
 router.route("/get-single-video").post(verifyJWT, getSingleVideo)
+
+// AI Thumbnail generation...
+router.route("/generate-thumbnail").post(verifyJWT, generateAiImage)
+router.route("/generate-description").post(verifyJWT, generateDescriptionForVideo)
 
 
 export default router

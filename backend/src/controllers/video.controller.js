@@ -4,6 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnAWS } from "../utils/awsUploader.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { generateAiImage } from "../utils/openaiImageGenerate.js";
 
 
 const uploadVideo = asyncHandler(async (req, res) => {
@@ -95,7 +96,7 @@ const updateVideo = asyncHandler(async (req, res) => {
     // step 6: check for updated object 
     // step 7: return response 
 
-    const { title, description } = req.body;
+    const { title, description , userThumbnailPrompt } = req.body;
     const { videoId } = req.params;
 
     if (!(title && description)) throw new ApiError(400, "title and description are required")
@@ -104,6 +105,11 @@ const updateVideo = asyncHandler(async (req, res) => {
 
     const localThumbnailPath = req.files?.thumbnail[0]?.path;
     if (!localThumbnailPath) throw new ApiError(400, "Invalid thumbnail url")
+
+    if(userThumbnailPrompt){
+        const aiGeneratedThumbnail = await generateAiImage(userThumbnailPrompt)
+        console.log(`AI Generated Thumbnail:`, aiGeneratedThumbnail)
+    }
 
     const uploadedThumbnail = await uploadOnCloudinary(localThumbnailPath)
     if (!uploadedThumbnail) throw new ApiError(400, "something went wrong while updating thumbnail ")
