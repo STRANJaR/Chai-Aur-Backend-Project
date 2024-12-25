@@ -19,8 +19,8 @@ import WatchHistory from './components/User/WatchHistory.jsx'
 import Layout from './components/Layout.jsx'
 import Home from './components/Home.jsx'
 import Watch from './components/Watch.jsx'
-import Dyanamic from './components/Dyanamic.jsx'
 import { Auth0Provider } from '@auth0/auth0-react'
+import UploadVideo from './components/UploadVideo.jsx'
 
 
 
@@ -104,19 +104,19 @@ const router = createBrowserRouter([
         )
       },
       {
-        path: '/dynamic/:id',
+        path: '/upload-video',
         element: (
           <PrivateRoute>
-            <Dyanamic />
+            <UploadVideo />
           </PrivateRoute>
         )
       },
-      // {
-      //   path: '*',
-      //   element: (
-      //     <NotFound />
-      //   )
-      // }
+      {
+        path: '*',
+        element: (
+          <NotFound />
+        )
+      }
     ]
   }
 ])

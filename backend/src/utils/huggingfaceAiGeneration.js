@@ -33,7 +33,7 @@ const generateText = async (req, res) => {
         return res
             .status(201)
             .json(
-                new ApiResponse(201, { GeneratedText: text }, "Text generated successfully")
+                new ApiResponse(201, text, "Text generated successfully")
             )
 
     } catch (error) {

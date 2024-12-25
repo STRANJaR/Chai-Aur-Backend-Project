@@ -14,7 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { useSelector, useDispatch } from 'react-redux'
 import { toast, ToastContainer } from 'react-toastify'
 import axios from 'axios'
-import { logout as logoutStore} from '../store/authSlice'
+import { logout as logoutStore } from '../store/authSlice'
 import { Link } from 'react-router-dom'
 import {
     Tooltip,
@@ -22,12 +22,6 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from './ui/tooltip'
-import Modal from './Modal'
-import { Button } from './ui/button'
-import { Label } from './ui/label'
-import { Input } from './ui/input'
-import { Textarea } from "./ui/textarea"
-import { Checkbox } from "./ui/checkbox"
 
 // OAuth by okta
 import { useAuth0 } from '@auth0/auth0-react'
@@ -41,11 +35,6 @@ const Header = () => {
     const user = useSelector(state => state.auth.user)
     const token = useSelector(state => state.auth.token)
 
-    const [loading, setLoading] = useState(false)
-    const [videoFile, setVideoFile] = useState(null)
-    const [thumbnailFile, setThumbnailFile] = useState(null)
-    const [title, setTitle] = useState('')
-    const [description, setDescription] = useState('')
 
 
 
@@ -60,44 +49,6 @@ const Header = () => {
         return;
     }
 
-    // Handle video upload 
-    const handleUpload = async (payload) => {
-        setLoading(true)
-        console.log('payload: ',payload.videoTitle)
-        console.log('payload: ',payload.videoDescription)
-
-        const formData = new FormData();
-        formData.append('videoTitle', title)
-        formData.append('videoDescription', description)
-        if (videoFile) formData.append('videoFile', videoFile)
-        if (thumbnailFile) formData.append('thumbnailFile', thumbnailFile)
-
-        try {
-            const response = await axios.post('http://localhost:8000/api/v1/video/',
-                {
-                    videoFile: formData?.get('videoFile'),
-                    thumbnail: formData?.get('thumbnailFile'),
-                    title: formData.get('videoTitle'),
-                    description: formData.get('videoDescription'),
-                    isPublished: false
-                },
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                        "Authorization": `Bearer ${token}`
-                    }
-                }
-            );
-
-            if (!response) toast.error('Video not uploaded !')
-            toast.success(response.data.message)
-            console.log(response.data)
-        } catch (error) {
-            console.log(error)
-            setLoading(false)
-        }
-        setLoading(false)
-    }
 
     // Handle User Logout
     const handleLogout = useCallback(async () => {
@@ -127,7 +78,7 @@ const Header = () => {
         return () => unsubscribe()
     }, [watch, dispatch, handleLogout])
 
-    
+
     return (
         <div className='shadow-sm border-b-2 h-18'>
             <div className='flex justify-between items-center p-3'>
@@ -178,66 +129,11 @@ const Header = () => {
 
                                 <Tooltip>
                                     <TooltipTrigger>
+                                        <Link to={'/upload-video'}>
 
-                                        {/* TODO: Upload video modal with api integration*/}
+                                            <Video className='h-5 w-5 dark:text-gray-300 ' />
+                                        </Link>
 
-                                        <form onSubmit={handleSubmit(handleUpload)}>
-
-                                            <Modal
-                                                trigger={<Video className='h-5 w-5 dark:text-gray-300 ' />}
-                                                title={'Upload your content !'}
-                                            >
-                                                <div className='flex flex-col gap-3'>
-
-                                                    <Label>Title</Label>
-                                                    <Input
-                                                        type='text'
-                                                        onChange={(e)=> setTitle(e.target.value)}
-                                                    />
-
-                                                    <Label>Description</Label>
-                                                    <Textarea
-                                                        onChange={(e)=> setDescription(e.target.value)}
-                                                        // {...register('videoDescription', { required: true })}
-                                                    />
-
-
-
-                                                    <Label>Video</Label>
-                                                    <Input
-                                                        className="block w-full  text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-300  dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                                        type="file"
-                                                        onChange={(e) => setVideoFile(e.target.files[0])}
-                                                    />
-                                                    <Label>Thumbnail</Label>
-                                                    <Input
-                                                        className="block w-full  text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-300  dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                                        type="file"
-                                                        onChange={(e) => setThumbnailFile(e.target.files[0])}
-                                                    />
-                                                    <div className="flex items-center space-x-2">
-                                                        <Checkbox id="terms" />
-                                                        <label
-                                                            htmlFor="terms"
-                                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                                        >
-                                                            Want to publish ?
-                                                        </label>
-                                                    </div>
-
-                                                    <Button
-                                                        className='w-full'
-                                                        onClick={handleUpload}
-                                                    >
-                                                        {
-                                                            loading ? <Loader2 className=' h-4 w-4 animate-spin' /> : "Publish"
-                                                        }
-                                                    </Button>
-
-
-                                                </div>
-                                            </Modal>
-                                        </form>
 
                                     </TooltipTrigger>
                                     <TooltipContent>
@@ -301,7 +197,7 @@ const Header = () => {
 
                 </div>
             </div>
-                            <ToastContainer/>
+            <ToastContainer />
         </div>
     )
 }
