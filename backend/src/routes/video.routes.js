@@ -9,6 +9,7 @@ import {
 } from "../controllers/video.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { generateAiImage, generateDescriptionForVideo } from "../utils/openaiImageGenerate.js";
+import { generateText } from "../utils/huggingfaceAiGeneration.js";
 
 const router = Router()
 
@@ -38,8 +39,8 @@ router.route("/get-all-videos").get(verifyJWT, getAllVideos)
 router.route("/get-single-video").post(verifyJWT, getSingleVideo)
 
 // AI Thumbnail generation...
-router.route("/generate-thumbnail").post(verifyJWT, generateAiImage)
-router.route("/generate-description").post(verifyJWT, generateDescriptionForVideo)
+router.route("/generate-thumbnail").post(verifyJWT, generateAiImage) // TODO: find other ai integration for this one
+router.route("/generate-description").post(verifyJWT, generateText)
 
 
 export default router

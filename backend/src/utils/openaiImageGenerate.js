@@ -3,14 +3,12 @@ import {stringify} from 'flatted'
 
 
 const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY})
-console.log(openai)
 
 
 // FEATURE: IMAGE GENERATION SYSTEM
 const generateAiImage = async (req, res) => {
 
     const {userThumbnailPrompt} = req.body;
-    console.log('prompt: ', userThumbnailPrompt)
 
     try {
         const response = await openai.images.generate({
@@ -22,7 +20,7 @@ const generateAiImage = async (req, res) => {
         })
 
         const generatedImage = response.data[0].url
-        console.log(generatedImage)
+
 
         return stringify({ generatedImage })
     } catch (error) {
@@ -34,7 +32,6 @@ const generateAiImage = async (req, res) => {
 // FEATURE: TEXT GENERATION SYSTEM
 const generateDescriptionForVideo = async(req, res) => {
     const {userDescriptionPrompt} = req.body;
-    console.log('userDescriptionPrompt: ', userDescriptionPrompt);
 
     // CHECK: handle response and remove conflicts
     try {
@@ -46,7 +43,6 @@ const generateDescriptionForVideo = async(req, res) => {
             
         });
 
-        console.log(response.choices)
     } catch (error) {
         console.log("Error IN GENERATE DESCRIPTION BODY", error.message)
     }
