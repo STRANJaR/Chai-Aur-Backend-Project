@@ -28,11 +28,6 @@ const UploadVideo = () => {
     const [description, setDescription] = useState('')
 
 
-    const [generatedDescription, setGeneratedDescription] = useState([])
-    const generatedDesc = generatedDescription.map((desc) => (
-        desc.generated_text
-    ))
-
     // Handle video upload 
     const handleUpload = async (payload) => {
         setLoading(true)
@@ -110,7 +105,6 @@ const UploadVideo = () => {
                     required={true}
                         rows={10}
                         onChange={(e) => setDescription(e.target.value)}
-                        defaultValue={generatedDesc}
                     // {...register('videoDescription', { required: true })}
                     />
 
