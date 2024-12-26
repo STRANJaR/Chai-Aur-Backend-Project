@@ -13,22 +13,28 @@ import {
     AccordionTrigger
 } from './ui/accordion'
 import { Input } from './ui/input'
-import {Comment} from './Comment.jsx'
+import { Comment } from './Comment.jsx'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
 
 const Watch = () => {
-    const { user } = useAuth0()
+
     const { id } = useParams()
 
 
-    const {register, handleSubmit} = useForm();
 
     const token = useSelector(state => state.auth.token)
+    const user = useSelector(state => state.auth.user)
+
+    const { register, handleSubmit } = useForm();
+
     const [loading, setLoading] = useState(false)
     const [video, setVideo] = useState([])
     const [creatorDetails, setCreatorDetails] = useState([])
+
+
+    const [comments, setComments] = useState([]);
 
 
 
@@ -53,14 +59,29 @@ const Watch = () => {
         }
     }
 
+    const fetchComments = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8000/api/v1/comment/all-comments/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            console.log(response)
+            setComments(response.data.data)
+
+        } catch (error) {
+            console.log('COMMENT ERROR: ', error)
+        }
+    }
 
 
     // Add a comment 
-    const handleComment = async(payload) => {
+    const handleComment = async (payload) => {
         setLoading(true)
 
         try {
-            const response = await axios.post(`http://localhost:8000/api/v1/comment/${id}`, 
+            const response = await axios.post(`http://localhost:8000/api/v1/comment/${id}`,
                 {
                     content: payload.comment
                 },
@@ -76,7 +97,7 @@ const Watch = () => {
             toast.success(response.data.message)
 
         } catch (error) {
-            console.log('COMMENT ERROR: ', error)
+            console.log('ADD COMMENT ERROR: ', error)
             setLoading(false)
         }
         setLoading(false)
@@ -85,6 +106,7 @@ const Watch = () => {
 
     React.useEffect(() => {
         fetchVideo()
+        fetchComments()
     }, [])
 
 
@@ -109,9 +131,9 @@ const Watch = () => {
                 <section className='p-3'>
                     <div className='w-[70%]'>
 
-                    <h1 className='font-semibold text-xl'>
-                        {video?.title || null}
-                    </h1>
+                        <h1 className='font-semibold text-xl'>
+                            {video?.title || null}
+                        </h1>
                     </div>
 
                     <div className='w-[70%]'>
@@ -159,7 +181,7 @@ const Watch = () => {
                             </div>
                         </div>
 
-                        <div className=' h-auto w-full rounded-md'>
+                        <div className=' h-auto w-full rounded-md bg-slate-50 dark:bg-zinc-900 px-4'>
                             <Accordion type="single" collapsible>
                                 <AccordionItem value="item-1">
                                     <AccordionTrigger>19B views | 3 months ago</AccordionTrigger>
@@ -180,35 +202,44 @@ const Watch = () => {
                                 <div className='flex flex-row gap-2 py-5'>
                                     <img
                                         className='h-10 w-10 rounded-full'
-                                        src={user?.picture}
+                                        src={user?.avatar}
                                         alt={user?.name}
                                     />
                                     <Input
                                         type='text'
                                         placeholder='Add a comment...'
                                         className='w-full px-3 py-2'
-                                        {...register('comment', {required: true})}
+                                        {...register('comment', { required: true })}
                                     />
-                                <Button 
-                                type='submit'
-                                className=''
-                                variant='outline'
-                                >
-                                {
-                                    loading ? 
-                                    <Loader2 className='transition-all h-4 w-4 animate-spin' /> 
-                                    : 'Comment'
-                                }
-                                </Button>
+                                    <Button
+                                        type='submit'
+                                        className=''
+                                        variant='outline'
+                                    >
+                                        {
+                                            loading ?
+                                                <Loader2 className='transition-all h-4 w-4 animate-spin' />
+                                                : 'Comment'
+                                        }
+                                    </Button>
                                 </div>
 
                             </form>
 
 
                             <div className='h-auto w-full'>
-                                <Comment
-                                comment={'hell'}
-                                />
+                                {
+                                    comments && comments.map(comment => (
+
+                                        <Comment
+                                            key={comment._id}
+                                            comment={comment.content}
+                                            avatar={comment.ownerDetails.avatar}
+                                            username={comment.ownerDetails.username}
+                                            commentPostTime={comment.createdAt}
+                                        />
+                                    ))
+                                }
                             </div>
                         </section>
                     </div>
