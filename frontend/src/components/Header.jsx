@@ -89,11 +89,11 @@ const Header = () => {
                         <img className='w-32 h-8' src="./youtube-logo.svg" alt="youtube logo" />
                     </Link>
                 </div>
-                <div>
+                <div className=' w-full px-40'>
                     <form onSubmit={handleSubmit(handleSearch)}>
                         <input
                             type='text'
-                            className='min-w-96 px-6 py-2 bg-transparent border border-gray-700   rounded-full'
+                            className='w-full px-6 py-2 bg-transparent border border-gray-700 text-sm font-medium  rounded-full'
                             placeholder='Search'
                             defaultValue={''}
                             onChange={searchField}
