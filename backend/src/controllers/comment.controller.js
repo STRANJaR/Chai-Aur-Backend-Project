@@ -7,6 +7,7 @@ import { Video } from "../models/video.model.js"
 
 const addComment = asyncHandler( async(req, res) => {
     const { content } = req.body;
+    console.log('content server: ', content)
     const { videoId } = req.params
 
     if(!content) throw new ApiError(400, "Comment is required")
@@ -21,7 +22,12 @@ const addComment = asyncHandler( async(req, res) => {
         }
     )
 
-    if(!comment) throw new ApiError(400, "something went wrong while adding comment")
+    if(!comment) return res
+    .status(500)
+    .json(
+        new ApiResponse(500, "something went wrong while creating comment")
+    )
+    
 
     return res
     .status(201)

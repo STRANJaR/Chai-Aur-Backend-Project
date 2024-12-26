@@ -5,26 +5,32 @@ import axios from 'axios'
 import { useSelector } from 'react-redux'
 import { useAuth0 } from '@auth0/auth0-react'
 import { Button } from './ui/button'
-import { ThumbsDown, ThumbsUp } from 'lucide-react'
+import { Loader2, ThumbsDown, ThumbsUp } from 'lucide-react'
 import {
     Accordion,
     AccordionContent,
     AccordionItem,
     AccordionTrigger
 } from './ui/accordion'
+import { Input } from './ui/input'
+import {Comment} from './Comment.jsx'
+import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
+
 
 const Watch = () => {
     const { user } = useAuth0()
-    console.log(user)
-
     const { id } = useParams()
-    console.log('url:', id)
+
+
+    const {register, handleSubmit} = useForm();
 
     const token = useSelector(state => state.auth.token)
+    const [loading, setLoading] = useState(false)
     const [video, setVideo] = useState([])
     const [creatorDetails, setCreatorDetails] = useState([])
-    console.log('creator: ', creatorDetails)
-    console.log(video.videoFile)
+
+
 
     const fetchVideo = async () => {
         try {
@@ -46,6 +52,36 @@ const Watch = () => {
             console.log(error)
         }
     }
+
+
+
+    // Add a comment 
+    const handleComment = async(payload) => {
+        setLoading(true)
+
+        try {
+            const response = await axios.post(`http://localhost:8000/api/v1/comment/${id}`, 
+                {
+                    content: payload.comment
+                },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            console.log(response)
+            toast.success(response.data.message)
+
+        } catch (error) {
+            console.log('COMMENT ERROR: ', error)
+            setLoading(false)
+        }
+        setLoading(false)
+    }
+
 
     React.useEffect(() => {
         fetchVideo()
@@ -85,10 +121,10 @@ const Watch = () => {
                                 <img
                                     className='h-12 w-12 rounded-full'
                                     src={creatorDetails?.avatar}
-                                    alt={creatorDetails.fullName}
+                                    alt={creatorDetails?.fullName}
                                 />
                                 <div className='flex flex-col justify-start items-center'>
-                                    <span className='text-sm font-medium pl-3'>{creatorDetails.fullName}</span>
+                                    <span className='text-sm font-medium pl-3'>{creatorDetails?.fullName}</span>
                                     <span className='text-xs text-gray-300'>100K subscribers</span>
                                 </div>
 
@@ -134,6 +170,47 @@ const Watch = () => {
                             </Accordion>
 
                         </div>
+
+
+                        {/* TODO: comment section  */}
+                        <section className='h-screen w-full  rounded-md p-5 my-5'>
+                            <span> 500 Comments</span>
+
+                            <form onSubmit={handleSubmit(handleComment)}>
+                                <div className='flex flex-row gap-2 py-5'>
+                                    <img
+                                        className='h-10 w-10 rounded-full'
+                                        src={user?.picture}
+                                        alt={user?.name}
+                                    />
+                                    <Input
+                                        type='text'
+                                        placeholder='Add a comment...'
+                                        className='w-full px-3 py-2'
+                                        {...register('comment', {required: true})}
+                                    />
+                                <Button 
+                                type='submit'
+                                className=''
+                                variant='outline'
+                                >
+                                {
+                                    loading ? 
+                                    <Loader2 className='transition-all h-4 w-4 animate-spin' /> 
+                                    : 'Comment'
+                                }
+                                </Button>
+                                </div>
+
+                            </form>
+
+
+                            <div className='h-auto w-full'>
+                                <Comment
+                                comment={'hell'}
+                                />
+                            </div>
+                        </section>
                     </div>
                 </section>
             </div>
