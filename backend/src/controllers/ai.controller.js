@@ -1,5 +1,5 @@
-import { ApiResponse } from "../utils/ApiResponse";
-import { generateImage } from "../utils/runwayImageGeneration";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { generateImage } from "../utils/runwayImageGeneration.js";
 
 
 const aiGeneratedThumbnail = async (req, res) => {
