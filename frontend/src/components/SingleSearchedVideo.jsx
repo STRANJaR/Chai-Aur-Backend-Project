@@ -6,14 +6,14 @@ import { Link } from 'react-router-dom'
 const SingleSearchedVideo = ({ thumbail, title, description, views, createdAt }) => {
     return (
         <Link to={'#'}> 
-        <div className='bg-zinc-900  hover:bg-transparent border h-auto w-full p-5 rounded-md transition-all'>
+        <div className='bg-zinc-900  hover:bg-transparent border h-auto w-full p-5 my-5 rounded-md transition-all'>
 
             <main className='flex flex-row justify-between'>
 
                 <div className='h-full w-[40%]'>
                     <img
                         className='rounded-md'
-                        src={thumbail} alt={title} />
+                        src={thumbail} alt={title.substring(0, 10)} />
                 </div>
 
                 <div className='flex flex-col justify-start gap-2 w-[60%] px-5'>

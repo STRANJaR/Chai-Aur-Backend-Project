@@ -22,10 +22,12 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from './ui/tooltip'
+import { Button } from './ui/button'
+import {useDebounce} from '@uidotdev/usehooks'
 
 // OAuth by okta
 import { useAuth0 } from '@auth0/auth0-react'
-import { Button } from './ui/button'
+
 
 
 const Header = () => {
@@ -42,10 +44,13 @@ const Header = () => {
     const dark = theme === 'dark';
 
     const [query, setQuery] = useState('');
-
+    // Implemented deboucing for optimizaiton
+    const debouncedSearchTerm = useDebounce(query, 2000);
 
 
     const handleSearch = (e) => {
+        setQuery(e.target.value);
+
         if (e.key === 'Enter' || e.key === 'click') {
             console.log('hello');
 
@@ -53,7 +58,6 @@ const Header = () => {
                 navigate(`/search?query=${query}`)
             } else console.log('search query empty')
         }
-        setQuery(e.target.value);
     }
 
     const fetchVideos = async (searchQuery) => {
@@ -98,12 +102,12 @@ const Header = () => {
 
     React.useEffect(() => {
         if (query.length > 2) {
-            fetchVideos(query)
+            fetchVideos(debouncedSearchTerm)
         } else {
             // console.log('search query is less than 3 characters')
         }
 
-    }, [dispatch, handleLogout, query])
+    }, [dispatch, handleLogout, debouncedSearchTerm])
 
 
     return (

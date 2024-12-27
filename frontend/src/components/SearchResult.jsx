@@ -16,14 +16,14 @@ const SearchResult = () => {
     console.log('videos', videos)
 
 
-    const fetchSearchResult = async(searchQuery)=> {
+    const fetchSearchResult = async (searchQuery) => {
         try {
-            const response = await axios.get(`http://localhost:8000/api/v1/video/search?query=${searchQuery}`, 
+            const response = await axios.get(`http://localhost:8000/api/v1/video/search?query=${searchQuery}`,
                 {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     }
- 
+
                 }
             )
             setVideos(response.data.data)
@@ -33,26 +33,30 @@ const SearchResult = () => {
         }
     }
 
-    useEffect(()=> {
-        if(searchQuery) fetchSearchResult(searchQuery)
+    useEffect(() => {
+        if (searchQuery) fetchSearchResult(searchQuery)
     }, [searchQuery])
 
-  return (
-    <div className='px-6 py-6' >
+    return (
+        <div className='px-6 py-6 h-screen' >
 
-        {videos && videos.map(video => (
+            {videos ? videos.map(video => (
                 <SingleSearchedVideo
-                key={video._id}
-                title={video.title}
-                description={video.description}
-                thumbail={video.thumbnail}
-                createdAt={video.createdAt}
-                views={video.views}
+                    key={video._id}
+                    title={video.title}
+                    description={video.description}
+                    thumbail={video.thumbnail}
+                    createdAt={video.createdAt}
+                    views={video.views}
                 />
-        ))}
-        
-    </div>
-  )
+            )) : 
+            <div className='h-screen w-full'>
+                <h1>No videos found for the given search query.</h1>
+            </div>
+        }
+
+        </div>
+    )
 }
 
 export default SearchResult
