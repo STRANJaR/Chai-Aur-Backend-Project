@@ -15,7 +15,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { toast, ToastContainer } from 'react-toastify'
 import axios from 'axios'
 import { logout as logoutStore } from '../store/authSlice'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
     Tooltip,
     TooltipContent,
@@ -32,28 +32,31 @@ const Header = () => {
 
     const { logout } = useAuth0();
     const dispatch = useDispatch()
+    const navigate = useNavigate();
 
     const user = useSelector(state => state.auth.user)
     const token = useSelector(state => state.auth.token)
 
 
-
-
     const { setTheme, theme } = useTheme();
     const dark = theme === 'dark';
-    const { register, handleSubmit, watch, } = useForm();
-
 
     const [query, setQuery] = useState('');
-    const searchField = watch('yt-search');
 
 
 
     const handleSearch = (e) => {
+        if (e.key === 'Enter' || e.key === 'click') {
+            console.log('hello');
+
+            if (query.trim()) {
+                navigate(`/search?query=${query}`)
+            } else console.log('search query empty')
+        }
         setQuery(e.target.value);
     }
 
-    const fetchVideos = async(searchQuery) => {
+    const fetchVideos = async (searchQuery) => {
         try {
             const response = await axios.get(`http://localhost:8000/api/v1/video/search?query=${searchQuery}`,
                 {
@@ -94,13 +97,13 @@ const Header = () => {
 
 
     React.useEffect(() => {
-        if(query.length > 2){
+        if (query.length > 2) {
             fetchVideos(query)
         } else {
             // console.log('search query is less than 3 characters')
         }
-        
-    }, [watch, dispatch, handleLogout, query])
+
+    }, [dispatch, handleLogout, query])
 
 
     return (
@@ -115,15 +118,16 @@ const Header = () => {
                 </div>
                 <div className='relative w-full'>
                     {/* <form onSubmit={handleSubmit(handleSearch)}> */}
-                        <input
-                            type='text'
-                            className='w-full px-6 py-2 bg-transparent border border-gray-700 text-sm font-medium  rounded-full'
-                            placeholder='Search'
-                            value={query}
-                            onChange={handleSearch}
-                        />
+                    <input
+                        type='text'
+                        className='w-full px-6 py-2 bg-transparent border border-gray-700 text-sm font-medium  rounded-full'
+                        placeholder='Search'
+                        value={query}
+                        onChange={handleSearch}
+                        onKeyDown={handleSearch}
+                    />
 
-                        {/* <Button variant='secondary' className='-m-12 h-8 rounded-full'> <SearchIcon className='h-6'/> </Button> */}
+                    {/* <Button variant='secondary' className='-m-12 h-8 rounded-full'> <SearchIcon className='h-6'/> </Button> */}
 
                     {/* </form>  */}
                 </div>
