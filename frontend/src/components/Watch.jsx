@@ -16,6 +16,7 @@ import { Input } from './ui/input'
 import { Comment } from './Comment.jsx'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
+import dateFormat from 'dateformat'
 
 
 const Watch = () => {
@@ -184,7 +185,14 @@ const Watch = () => {
                         <div className=' h-auto w-full rounded-md bg-slate-50 dark:bg-zinc-900 px-4'>
                             <Accordion type="single" collapsible>
                                 <AccordionItem value="item-1">
-                                    <AccordionTrigger>19B views | 3 months ago</AccordionTrigger>
+                                    <AccordionTrigger> 
+                                        <div className='flex flex-row items-center gap-3'>
+
+                                        <span>{video?.views} views</span> 
+                                        | 
+                                        <span> {dateFormat(video?.createdAt, 'dd-mmm-yyyy')} </span> 
+                                        </div>
+                                        </AccordionTrigger>
                                     <AccordionContent>
                                         {video?.description}
                                     </AccordionContent>
@@ -195,11 +203,11 @@ const Watch = () => {
 
 
                         {/* TODO: comment section  */}
-                        <section className='h-screen w-full  rounded-md p-5 my-5'>
-                            <span> 500 Comments</span>
+                        <section className='h-auto w-full  rounded-md p-5 my-5 border'>
+                            <span> {comments.length} Comments</span>
 
                             <form onSubmit={handleSubmit(handleComment)}>
-                                <div className='flex flex-row gap-2 py-5'>
+                                <div className='flex flex-row gap-2 px-3 py-5'>
                                     <img
                                         className='h-10 w-10 rounded-full'
                                         src={user?.avatar}
@@ -233,6 +241,7 @@ const Watch = () => {
 
                                         <Comment
                                             key={comment._id}
+                                            userId={comment.ownerDetails._id}
                                             comment={comment.content}
                                             avatar={comment.ownerDetails.avatar}
                                             username={comment.ownerDetails.username}

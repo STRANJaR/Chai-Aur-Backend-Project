@@ -33,7 +33,7 @@ const TagInput = () => {
             <div className="flex flex-wrap items-center rounded-sm">
                 <ul className="flex flex-wrap gap-3 py-3">
                     {tags.map((tag, index) => (
-                        <li key={index} className="bg-gray-300 text-slate-900 dark:bg-slate-900 dark:text-gray-300 px-4 py-2 rounded-sm flex justify-center gap-1">
+                        <li key={index} className="bg-gray-300 text-slate-900 dark:bg-zinc-900 dark:text-gray-300 px-4 py-2 rounded-sm flex justify-center gap-1">
                             {tag}
                             <span className=" cursor-pointer text-red-500" onClick={() => removeTag(index)}>
                                 &times;
