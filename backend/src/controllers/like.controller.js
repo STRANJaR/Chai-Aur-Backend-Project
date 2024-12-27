@@ -3,6 +3,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { Like } from "../models/like.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { Video } from "../models/video.model.js";
 
 
 const toggleVideoLike = asyncHandler( async(req, res) => {
@@ -10,33 +11,39 @@ const toggleVideoLike = asyncHandler( async(req, res) => {
 
     if(!isValidObjectId(videoId)) throw new ApiError(400, "Invalid video id")
 
-    // If user already liked the video 
-        const alreadyLiked = await Like.findOne(
+    try {
+        // If user already liked the video 
+            const alreadyLiked = await Like.findOne(
+                {
+                    video: videoId,
+                    likedBy: req.user?._id
+                }
+            )
+    
+            if(alreadyLiked){
+                await Like.findByIdAndDelete(videoId) 
+    
+                return res
+                .status(200)
+                .json( new ApiResponse(200, {message: 'Unliked the video', liked: false }))
+            }
+    
+        await Like.create(
             {
                 video: videoId,
                 likedBy: req.user?._id
             }
         )
-
-        if(alreadyLiked){
-            await Like.findByIdAndDelete(videoId)
-
-            return res
-            .status(200)
-            .json( new ApiResponse(200, "Unliked video successfully"))
-        }
-
-    await Like.create(
-        {
-            video: videoId,
-            likedBy: req.user?._id
-        }
-    )
-
-
-    return res
-    .status(201)
-    .json( new ApiResponse(200, {} ,"Video liked successfully"))
+    
+    
+        return res
+        .status(201)
+        .json( new ApiResponse(200, {} ,"Liked the video"))
+        
+    } catch (error) {
+        console.error('Error liking/unliking video:', error);
+        return res.status(500).json({ message: 'Server error' });
+    }
 
 })
 

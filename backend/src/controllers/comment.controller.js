@@ -52,7 +52,7 @@ const deleteComment = asyncHandler( async(req, res) =>{
 
 const updateComment = asyncHandler( async(req, res) => {
     const { content } = req.body;
-    console.log('server:',content)
+
     const { commentId } = req.params;
 
     if(!content) throw new ApiError(400, "comment is required")

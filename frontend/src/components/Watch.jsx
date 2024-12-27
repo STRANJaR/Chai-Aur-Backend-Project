@@ -17,6 +17,7 @@ import { Comment } from './Comment.jsx'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import dateFormat from 'dateformat'
+import LikeButton from './LikeButton'
 
 
 const Watch = () => {
@@ -31,14 +32,16 @@ const Watch = () => {
     const { register, handleSubmit } = useForm();
 
     const [loading, setLoading] = useState(false)
-    const [video, setVideo] = useState([])
-    const [creatorDetails, setCreatorDetails] = useState([])
+    const [video, setVideo] = useState({})
+    const [allvideos, setAllVideos] = useState([])
+    
 
 
     const [comments, setComments] = useState([]);
 
 
 
+    // Fetch videos from server 
     const fetchVideo = async () => {
         try {
             const response = await axios.post('http://localhost:8000/api/v1/video/get-single-video',
@@ -52,14 +55,41 @@ const Watch = () => {
                 }
 
             )
-            console.log(response)
+
+
+         
+            // console.log(response)
             setVideo(response.data.data.singleVideo)
-            setCreatorDetails(response.data.data.creatorInfo[0].creatorDetails[0])
+
         } catch (error) {
             console.log(error)
         }
     }
 
+
+    // HANDLE LIKE 
+    const handleLike = async () => {
+        try {
+            const response = await axios.post(`http://localhost:8000/api/v1/like/v/${id}`, {}, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            console.log(response)
+            setVideo(prevState => ({...prevState, likes: response.data.data.likes }))
+            toast.success(response.data.data)
+
+        } catch (error) {
+            console.log('LIKE ERROR: ', error)
+            toast.error('try again')
+        }
+    }
+
+
+    // Handle dislike
+
+    // Fetch comments from server
     const fetchComments = async () => {
         try {
             const response = await axios.get(`http://localhost:8000/api/v1/comment/all-comments/${id}`, {
@@ -78,15 +108,16 @@ const Watch = () => {
 
 
     // Handle updated comment 
-    const handleUpdatedComment = async(commentId, updatedComment) => {
+    const handleUpdatedComment = (commentId, updatedComment) => {
         setComments(
-            comments.map(comment => comment._id === commentId ? {...comment, content: updatedComment}: comment)
+            comments.map(comment => comment._id === commentId ? { ...comment, content: updatedComment } : comment)
         )
     }
 
+    // Handle deleted comment 
     const handleDeletedComments = (commentId) => {
         setComments(
-            comments.filter(comment => comment._id !== commentId )
+            comments.filter(comment => comment._id !== commentId)
         )
     }
 
@@ -107,8 +138,9 @@ const Watch = () => {
                 }
             );
 
-            console.log(response)
+            setLoading(false)
             toast.success(response.data.message)
+            console.log('new comment: ', response)
 
         } catch (error) {
             console.log('ADD COMMENT ERROR: ', error)
@@ -157,11 +189,11 @@ const Watch = () => {
 
                                 <img
                                     className='h-12 w-12 rounded-full'
-                                    src={creatorDetails?.avatar}
-                                    alt={creatorDetails?.fullName}
+                                    src={''}
+                                    alt={''}
                                 />
                                 <div className='flex flex-col justify-start items-center'>
-                                    <span className='text-sm font-medium pl-3'>{creatorDetails?.fullName}</span>
+                                    <span className='text-sm font-medium pl-3'>{allvideos?.fullName}</span>
                                     <span className='text-xs text-gray-300'>100K subscribers</span>
                                 </div>
 
@@ -181,11 +213,12 @@ const Watch = () => {
                                 <Button
                                     className='rounded-full items-center'
                                     variant='outline'
+                                    onClick={handleLike}
                                 >
                                     <ThumbsUp />
-                                    Like
+                                        Like
                                 </Button>
-
+                                
                                 <Button
                                     className='rounded-full items-center'
                                     variant='outline'
@@ -199,14 +232,14 @@ const Watch = () => {
                         <div className=' h-auto w-full rounded-md bg-slate-50 dark:bg-zinc-900 px-4'>
                             <Accordion type="single" collapsible>
                                 <AccordionItem value="item-1">
-                                    <AccordionTrigger> 
+                                    <AccordionTrigger>
                                         <div className='flex flex-row items-center gap-3'>
 
-                                        <span>{video?.views} views</span> 
-                                        | 
-                                        <span> {dateFormat(video?.createdAt, 'dd-mmm-yyyy')} </span> 
+                                            <span>{video?.views} views</span>
+                                            |
+                                            <span> {dateFormat(video?.createdAt, 'dd-mmm-yyyy')} </span>
                                         </div>
-                                        </AccordionTrigger>
+                                    </AccordionTrigger>
                                     <AccordionContent>
                                         {video?.description}
                                     </AccordionContent>
@@ -231,7 +264,7 @@ const Watch = () => {
                                         type='text'
                                         placeholder='Add a comment...'
                                         className='w-full px-3 py-2'
-                                        {...register('comment', { required: true })}
+                                    {...register('comment', { required: true })}
                                     />
                                     <Button
                                         type='submit'
