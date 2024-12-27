@@ -77,6 +77,19 @@ const Watch = () => {
     }
 
 
+    // Handle updated comment 
+    const handleUpdatedComment = async(commentId, updatedComment) => {
+        setComments(
+            comments.map(comment => comment._id === commentId ? {...comment, content: updatedComment}: comment)
+        )
+    }
+
+    const handleDeletedComments = (commentId) => {
+        setComments(
+            comments.filter(comment => comment._id !== commentId )
+        )
+    }
+
     // Add a comment 
     const handleComment = async (payload) => {
         setLoading(true)
@@ -99,6 +112,7 @@ const Watch = () => {
 
         } catch (error) {
             console.log('ADD COMMENT ERROR: ', error)
+            toast.error('something went wrong while comment')
             setLoading(false)
         }
         setLoading(false)
@@ -241,11 +255,14 @@ const Watch = () => {
 
                                         <Comment
                                             key={comment._id}
+                                            commentId={comment._id}
                                             userId={comment.ownerDetails._id}
                                             comment={comment.content}
                                             avatar={comment.ownerDetails.avatar}
                                             username={comment.ownerDetails.username}
                                             commentPostTime={comment.createdAt}
+                                            onUpdate={handleUpdatedComment}
+                                            onDelete={handleDeletedComments}
                                         />
                                     ))
                                 }
