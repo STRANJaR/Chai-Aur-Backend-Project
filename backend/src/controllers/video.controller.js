@@ -96,7 +96,7 @@ const updateVideo = asyncHandler(async (req, res) => {
     // step 6: check for updated object 
     // step 7: return response 
 
-    const { title, description , userThumbnailPrompt } = req.body;
+    const { title, description, userThumbnailPrompt } = req.body;
     const { videoId } = req.params;
 
     if (!(title && description)) throw new ApiError(400, "title and description are required")
@@ -106,7 +106,7 @@ const updateVideo = asyncHandler(async (req, res) => {
     const localThumbnailPath = req.files?.thumbnail[0]?.path;
     if (!localThumbnailPath) throw new ApiError(400, "Invalid thumbnail url")
 
-    if(userThumbnailPrompt){
+    if (userThumbnailPrompt) {
         const aiGeneratedThumbnail = await generateAiImage(userThumbnailPrompt)
         console.log(`AI Generated Thumbnail:`, aiGeneratedThumbnail)
     }
@@ -181,12 +181,43 @@ const getSingleVideo = asyncHandler(async (req, res) => {
 
     return res
         .status(200)
-        .json(new ApiResponse(200, {singleVideo, creatorInfo}, 'video fetched successfully'))
+        .json(new ApiResponse(200, { singleVideo, creatorInfo }, 'video fetched successfully'))
 })
+
+
+
+const searchVideos = asyncHandler(async (req, res) => {
+    const { query } = req.query;
+    console.log("server query: ", query)
+
+    if (!query) throw new ApiError(400, "Invalid search query")
+
+    try {
+        const videos = await Video.find({
+            $or: [
+                { title: { $regex: query, $options: 'i' } },
+                { description: { $regex: query, $options: 'i' } },
+                { tags: { $regex: query, $options: 'i' } }
+            ]
+        }).exec()
+
+        if (!videos) throw new ApiResponse(404, {}, 'No videos found')
+
+        return res
+            .status(200)
+            .json(new ApiResponse(200, videos, 'Videos fetched successfully'))
+    } catch (error) {
+        throw new ApiError('Error in search videos', error)
+    }
+
+})
+
+
 export {
     uploadVideo,
     deleteVideo,
     updateVideo,
     getAllVideos,
-    getSingleVideo
+    getSingleVideo,
+    searchVideos
 }

@@ -5,7 +5,8 @@ import {
     updateVideo, 
     uploadVideo,
     getAllVideos,
-    getSingleVideo
+    getSingleVideo,
+    searchVideos
 } from "../controllers/video.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { generateAiImage, generateDescriptionForVideo } from "../utils/openaiImageGenerate.js";
@@ -37,6 +38,7 @@ router.route("/update-video/:videoId").patch(verifyJWT, upload.fields([
 
 router.route("/get-all-videos").get(verifyJWT, getAllVideos)
 router.route("/get-single-video").post(verifyJWT, getSingleVideo)
+router.route("/search").get(verifyJWT, searchVideos)
 
 // AI Thumbnail generation...
 router.route("/generate-thumbnail").post(verifyJWT, generateAiImage) // TODO: find other ai integration for this one

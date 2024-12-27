@@ -9,7 +9,7 @@ import {
     DropdownMenuTrigger,
 } from './ui/dropdown-menu'
 import { useTheme } from '../components/theme-provider'
-import { Dock, Loader2, LogOut, LucideBell, Moon, Settings, Sun, User, Video } from 'lucide-react'
+import { Dock, Loader2, LogOut, LucideBell, Moon, SearchIcon, Settings, Sun, User, Video } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { useSelector, useDispatch } from 'react-redux'
 import { toast, ToastContainer } from 'react-toastify'
@@ -25,6 +25,7 @@ import {
 
 // OAuth by okta
 import { useAuth0 } from '@auth0/auth0-react'
+import { Button } from './ui/button'
 
 
 const Header = () => {
@@ -41,14 +42,32 @@ const Header = () => {
     const { setTheme, theme } = useTheme();
     const dark = theme === 'dark';
     const { register, handleSubmit, watch, } = useForm();
+
+
+    const [query, setQuery] = useState('');
     const searchField = watch('yt-search');
 
 
 
-    const handleSearch = () => {
-        return;
+    const handleSearch = (e) => {
+        setQuery(e.target.value);
     }
 
+    const fetchVideos = async(searchQuery) => {
+        try {
+            const response = await axios.get(`http://localhost:8000/api/v1/video/search?query=${searchQuery}`,
+                {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                }
+            );
+            console.log(response)
+
+        } catch (error) {
+            console.log('Error while fetch search videos: ', error)
+        }
+    }
 
     // Handle User Logout
     const handleLogout = useCallback(async () => {
@@ -71,17 +90,22 @@ const Header = () => {
         }
     }, [dispatch])
 
+
+
+
     React.useEffect(() => {
-        const { unsubscribe } = watch((value) => {
-            // console.log(value)
-        })
-        return () => unsubscribe()
-    }, [watch, dispatch, handleLogout])
+        if(query.length > 2){
+            fetchVideos(query)
+        } else {
+            // console.log('search query is less than 3 characters')
+        }
+        
+    }, [watch, dispatch, handleLogout, query])
 
 
     return (
         <div className='shadow-sm border-b-2 h-18'>
-            <div className='flex justify-between items-center p-3'>
+            <div className='flex justify-around items-center p-3'>
 
                 <div>
                     <Link to={'/dashboard'}>
@@ -89,18 +113,19 @@ const Header = () => {
                         <img className='w-32 h-8' src="./youtube-logo.svg" alt="youtube logo" />
                     </Link>
                 </div>
-                <div className=' w-full px-40'>
-                    <form onSubmit={handleSubmit(handleSearch)}>
+                <div className='relative w-full'>
+                    {/* <form onSubmit={handleSubmit(handleSearch)}> */}
                         <input
                             type='text'
                             className='w-full px-6 py-2 bg-transparent border border-gray-700 text-sm font-medium  rounded-full'
                             placeholder='Search'
-                            defaultValue={''}
-                            onChange={searchField}
-                            {...register('yt-search')}
+                            value={query}
+                            onChange={handleSearch}
                         />
 
-                    </form>
+                        {/* <Button variant='secondary' className='-m-12 h-8 rounded-full'> <SearchIcon className='h-6'/> </Button> */}
+
+                    {/* </form>  */}
                 </div>
                 <div>
                     <div className='flex justify-between items-center gap-3'>
