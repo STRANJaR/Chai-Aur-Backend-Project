@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import { Input } from './ui/input';
 
-const TagInput = () => {
+const TagInput = ({onDataReceived}) => {
 
     const [tags, setTags] = useState([]);
     const [inputValue, setInputValue] = useState('');
 
+
+    const handleTagSend = () => {onDataReceived(inputValue)}
 
     const handleInputChange = (e) => {
         setInputValue(e.target.value);
@@ -17,6 +19,7 @@ const TagInput = () => {
 
             if(inputValue.trim()!== ''){
                 setTags([...tags, inputValue.trim()]);
+                handleTagSend()
                 setInputValue('');
             }
         }

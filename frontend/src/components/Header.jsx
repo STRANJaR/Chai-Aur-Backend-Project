@@ -8,7 +8,7 @@ import {
     DropdownMenuTrigger,
 } from './ui/dropdown-menu'
 import { useTheme } from '../components/theme-provider'
-import { Dock, Loader2, LogOut, LucideBell, Moon, Settings, Sun, User, Video } from 'lucide-react'
+import { ArrowUp, Dock, Loader2, LogOut, LucideBell, Moon, Settings, Sun, User, Video } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { useSelector, useDispatch } from 'react-redux'
 import { toast, ToastContainer } from 'react-toastify'
@@ -26,6 +26,7 @@ import {
 // OAuth by okta
 import { useAuth0 } from '@auth0/auth0-react'
 import SearchBar from './SearchBar'
+import { Button } from './ui/button'
 
 
 
@@ -83,14 +84,41 @@ const Header = () => {
                 </div>
                 <div className='relative w-[50%]'>
 
-                    {/* // TODO: search bar  */}
-                    <SearchBar/>
+                    {/* // OPTIMIZE: search bar  */}
+                    <SearchBar />
                 </div>
                 <div className=' flex w-[30%] flex-row justify-end'>
                     <div className='flex justify-between items-center gap-3'>
 
+
+                    <div className=' transition-colors cursor-pointer  rounded-full'>
+                            <TooltipProvider>
+
+                                <Tooltip>
+                                    <TooltipTrigger>
+                                        <Link to={'/upload-video'}>
+
+                                            {/* <Video className='h-6 w-6 dark:text-gray-300 ' /> */}
+                                            <Button 
+                                            variant='secondary' 
+                                            className='rounded-full h-9'> 
+                                                <ArrowUp className='h-56 w-6'/>
+                                                Create</Button>
+                                        </Link>
+
+
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        Upload
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+
+                        </div>
+
+
                         <div
-                            className={` hover:transition-all p-2 rounded-full flex items-center cursor-pointer transition-transform duration-500
+                            className={` hover:transition-all  rounded-full flex items-center cursor-pointer transition-transform duration-500
                             ${dark ? 'rotate-180' : 'rotate-0'}`
                             }
                             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
@@ -108,26 +136,10 @@ const Header = () => {
                             }
 
                         </div>
-                        <div className=' transition-colors cursor-pointer p-2 rounded-full'>
-                            <TooltipProvider>
+                     
 
-                                <Tooltip>
-                                    <TooltipTrigger>
-                                        <Link to={'/upload-video'}>
-
-                                            <Video className='h-5 w-5 dark:text-gray-300 ' />
-                                        </Link>
-
-
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        Upload
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
-
-                        </div>
-                        <div className=' transition-colors  cursor-pointer p-2 rounded-full'>
+                        {/* TODO: NOTIFICATION SYSTEM  */}
+                        {/* <div className=' transition-colors  cursor-pointer p-2 rounded-full'>
                             <TooltipProvider>
 
                                 <Tooltip>
@@ -140,13 +152,13 @@ const Header = () => {
                                     </TooltipContent>
                                 </Tooltip>
                             </TooltipProvider>
-                        </div>
-                        <div className='pt-2 transition-colors  cursor-pointer rounded-full'>
+                        </div> */}
+                        <div className=' transition-colors  cursor-pointer rounded-full'>
 
 
                             <DropdownMenu>
                                 <DropdownMenuTrigger>
-                                    <Avatar className='h-8 w-8'>
+                                    <Avatar className='h-9 w-9'>
                                         <AvatarImage src={user?.avatar} />
                                         <AvatarFallback>
                                             Me

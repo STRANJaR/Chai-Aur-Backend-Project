@@ -17,10 +17,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 
 const Categories = [
     {
-        label: 'Film & Animation',
-        value: 'film-animation',
-    },
-    {
         label: 'Comedy',
         value: 'comedy',
     },
@@ -88,18 +84,24 @@ const UploadVideo = () => {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
 
+    const [tags, setTags] = useState([])
+    const [category, setCategory] = useState('')
+    console.log('category: ', category)
+
+
 
     // Handle video upload 
     const handleUpload = async (payload) => {
         setLoading(true)
-        console.log('payload: ', payload.videoTitle)
-        console.log('payload: ', payload.videoDescription)
 
         const formData = new FormData();
         formData.append('videoTitle', title)
         formData.append('videoDescription', description)
         if (videoFile) formData.append('videoFile', videoFile)
         if (thumbnailFile) formData.append('thumbnailFile', thumbnailFile)
+
+        // validate !empty tags before send data
+        const videoTag = tags.length ? tags : null
 
         try {
             const response = await axios.post('http://localhost:8000/api/v1/video/',
@@ -108,7 +110,8 @@ const UploadVideo = () => {
                     thumbnail: formData?.get('thumbnailFile'),
                     title: formData.get('videoTitle'),
                     description: formData.get('videoDescription'),
-                    isPublished: false
+                    tags: videoTag,
+                    category: 'travel'
                 },
                 {
                     headers: {
@@ -131,6 +134,11 @@ const UploadVideo = () => {
     }
 
 
+    // HANDLE RECEIVED TAGS FROM TAG INPUT COMPONENT 
+    const handleTagInputData = (data)=> {
+        setTags([...tags, data])
+        
+    }
 
 
     return (
@@ -171,7 +179,9 @@ const UploadVideo = () => {
 
 
                     <Label>Tags</Label>
-                    <TagInput />
+                    <TagInput 
+                    onDataReceived={handleTagInputData}
+                    />
 
                     <Label>Categories</Label>
                     <Select>
@@ -179,10 +189,10 @@ const UploadVideo = () => {
                             <SelectValue placeholder="Categories" />
                         </SelectTrigger>
                         <SelectContent>
-                            {Categories && Categories.map((item) => (
+                            {Categories && Categories.map((item, index) => (
 
                                 <SelectItem
-                                    key={item.value}
+                                    key={index}
                                     value={item.value}
                                 >
                                     {item.label}
