@@ -134,7 +134,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 
-  <React.StrictMode>
+
     <Auth0Provider
       domain="dev-40d78xpq4u26l8lc.us.auth0.com"
       clientId="QHLwb5dqh9ccNOWAarulBwjBBnxIwv35"
@@ -151,5 +151,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         </ThemeProvider>
       </Provider>
     </Auth0Provider>
-  </React.StrictMode>
+
 )

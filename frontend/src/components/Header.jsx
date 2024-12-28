@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react'
-import { useForm } from 'react-hook-form'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -9,24 +8,24 @@ import {
     DropdownMenuTrigger,
 } from './ui/dropdown-menu'
 import { useTheme } from '../components/theme-provider'
-import { Dock, Loader2, LogOut, LucideBell, Moon, SearchIcon, Settings, Sun, User, Video } from 'lucide-react'
+import { Dock, Loader2, LogOut, LucideBell, Moon, Settings, Sun, User, Video } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { useSelector, useDispatch } from 'react-redux'
 import { toast, ToastContainer } from 'react-toastify'
 import axios from 'axios'
 import { logout as logoutStore } from '../store/authSlice'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
 } from './ui/tooltip'
-import { Button } from './ui/button'
-import {useDebounce} from '@uidotdev/usehooks'
+
 
 // OAuth by okta
 import { useAuth0 } from '@auth0/auth0-react'
+import SearchBar from './SearchBar'
 
 
 
@@ -34,7 +33,6 @@ const Header = () => {
 
     const { logout } = useAuth0();
     const dispatch = useDispatch()
-    const navigate = useNavigate();
 
     const user = useSelector(state => state.auth.user)
     const token = useSelector(state => state.auth.token)
@@ -43,38 +41,6 @@ const Header = () => {
     const { setTheme, theme } = useTheme();
     const dark = theme === 'dark';
 
-    const [query, setQuery] = useState('');
-    // Implemented deboucing for optimizaiton
-    const debouncedSearchTerm = useDebounce(query, 2000);
-
-
-    const handleSearch = (e) => {
-        setQuery(e.target.value);
-
-        if (e.key === 'Enter' || e.key === 'click') {
-            console.log('hello');
-
-            if (query.trim()) {
-                navigate(`/search?query=${query}`)
-            } else console.log('search query empty')
-        }
-    }
-
-    const fetchVideos = async (searchQuery) => {
-        try {
-            const response = await axios.get(`http://localhost:8000/api/v1/video/search?query=${searchQuery}`,
-                {
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    }
-                }
-            );
-            console.log(response)
-
-        } catch (error) {
-            console.log('Error while fetch search videos: ', error)
-        }
-    }
 
     // Handle User Logout
     const handleLogout = useCallback(async () => {
@@ -101,41 +67,26 @@ const Header = () => {
 
 
     React.useEffect(() => {
-        if (query.length > 2) {
-            fetchVideos(debouncedSearchTerm)
-        } else {
-            // console.log('search query is less than 3 characters')
-        }
 
-    }, [dispatch, handleLogout, debouncedSearchTerm])
+    }, [dispatch, handleLogout])
 
 
     return (
         <div className='shadow-sm border-b-2 h-18'>
             <div className='flex justify-around items-center p-3'>
 
-                <div>
+                <div className=' w-[30%]'>
                     <Link to={'/dashboard'}>
 
                         <img className='w-32 h-8' src="./youtube-logo.svg" alt="youtube logo" />
                     </Link>
                 </div>
-                <div className='relative w-full'>
-                    {/* <form onSubmit={handleSubmit(handleSearch)}> */}
-                    <input
-                        type='text'
-                        className='w-full px-6 py-2 bg-transparent border border-gray-700 text-sm font-medium  rounded-full'
-                        placeholder='Search'
-                        value={query}
-                        onChange={handleSearch}
-                        onKeyDown={handleSearch}
-                    />
+                <div className='relative w-[50%]'>
 
-                    {/* <Button variant='secondary' className='-m-12 h-8 rounded-full'> <SearchIcon className='h-6'/> </Button> */}
-
-                    {/* </form>  */}
+                    {/* // TODO: search bar  */}
+                    <SearchBar/>
                 </div>
-                <div>
+                <div className=' flex w-[30%] flex-row justify-end'>
                     <div className='flex justify-between items-center gap-3'>
 
                         <div
