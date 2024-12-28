@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
     Card,
@@ -9,10 +9,11 @@ import {
     CardTitle,
 } from '@/components/ui/card.tsx'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.tsx"
+import dateFormat from 'dateformat'
 
 
 
-const VideoCard = ({thumbnail, avatarImage, videoTitle, channelName, videoViews, uploadTime}) => {
+const VideoCard = ({thumbnail, avatarImage, videoTitle, channelName, videoViews, uploadTime, creator}) => {
 
 
     return (
@@ -32,7 +33,7 @@ const VideoCard = ({thumbnail, avatarImage, videoTitle, channelName, videoViews,
                         </Avatar>
                         <div>
                             <p className=' text-sm font-medium'>
-                                {videoTitle || 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.'}
+                                {videoTitle.substring(0, 50) + '...' || ''}
                             </p>
                         </div>
                     </div>
@@ -40,7 +41,7 @@ const VideoCard = ({thumbnail, avatarImage, videoTitle, channelName, videoViews,
                         <span className='hover:text-white'>{channelName || 'Rohit Shrivastav'}</span>
                         <div className='flex flex-row items-center gap-3 py-1'>
                             <span>{videoViews || '4.9K views'}</span>
-                            <span>{uploadTime || '7 hours ago'}</span>
+                            <span>{dateFormat(uploadTime, 'dd-mmm-yyyy') || '7 hours ago'}</span>
                         </div>
                     </div>
                 </div>

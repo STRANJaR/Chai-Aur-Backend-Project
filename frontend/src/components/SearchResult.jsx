@@ -43,6 +43,7 @@ const SearchResult = () => {
             {videos ? videos.map(video => (
                 <SingleSearchedVideo
                     key={video._id}
+                    videoId={video._id}
                     title={video.title}
                     description={video.description}
                     thumbail={video.thumbnail}

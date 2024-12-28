@@ -6,11 +6,12 @@ import { Link } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
 
 const Home = () => {
+  const token = useSelector(state => state.auth.token)
 
   const [loading, setLoading] = useState(false)
   const [videos, setVideos] = useState([])
+
   const [ownerDetails, setOwnerDetails] = useState([])
-  const token = useSelector(state => state.auth.token)
 
 
   const getAllVideos = async () => {
@@ -26,7 +27,7 @@ const Home = () => {
 
       console.log(response)
       setVideos(response.data.data)
-      setOwnerDetails(response.data.data.ownerDetails)
+    
 
     } catch (error) {
       console.log(error)
@@ -46,7 +47,7 @@ const Home = () => {
 
       <div className='h-auto w-full text-sm flex flex-row justify-center items-center flex-wrap gap-5 py-4'>
         {
-          videos ? videos.map(video => (
+          videos.length ? videos.map(video => (
             <Link
             key={video._id}
             to={`/watch/${video._id}`}>
@@ -59,6 +60,7 @@ const Home = () => {
                 videoViews={video.views}
                 uploadTime={video.createdAt}
                 videoTitle={video.title}
+                creator={video.ownerDetails}
                 
               />
 

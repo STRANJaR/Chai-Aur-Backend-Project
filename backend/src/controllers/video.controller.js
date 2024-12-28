@@ -199,7 +199,8 @@ const searchVideos = asyncHandler(async (req, res) => {
             $or: [
                 { title: { $regex: query, $options: 'i' } },
                 { description: { $regex: query, $options: 'i' } },
-                { tags: { $regex: query, $options: 'i' } }
+                { tags: { $regex: query, $options: 'i' } },
+                { category: { $regex: query, $options: 'i' } }
             ]
         }).exec()
 

@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import ReactPlayer from 'react-player/lazy'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import { useAuth0 } from '@auth0/auth0-react'
@@ -18,6 +17,8 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import dateFormat from 'dateformat'
 import LikeButton from './LikeButton'
+import VideoPlayer from './VideoPlayer'
+import videojs from 'video.js'
 
 
 const Watch = () => {
@@ -25,16 +26,16 @@ const Watch = () => {
     const { id } = useParams()
 
 
-
     const token = useSelector(state => state.auth.token)
     const user = useSelector(state => state.auth.user)
+    const playerRef = useRef(null)
 
     const { register, handleSubmit } = useForm();
 
     const [loading, setLoading] = useState(false)
     const [video, setVideo] = useState({})
     const [allvideos, setAllVideos] = useState([])
-    
+
 
 
     const [comments, setComments] = useState([]);
@@ -57,7 +58,7 @@ const Watch = () => {
             )
 
 
-         
+
             // console.log(response)
             setVideo(response.data.data.singleVideo)
 
@@ -77,7 +78,7 @@ const Watch = () => {
             });
 
             console.log(response)
-            setVideo(prevState => ({...prevState, likes: response.data.data.likes }))
+            setVideo(prevState => ({ ...prevState, likes: response.data.data.likes }))
             toast.success(response.data.data)
 
         } catch (error) {
@@ -86,8 +87,6 @@ const Watch = () => {
         }
     }
 
-
-    // Handle dislike
 
     // Fetch comments from server
     const fetchComments = async () => {
@@ -114,12 +113,14 @@ const Watch = () => {
         )
     }
 
+
     // Handle deleted comment 
     const handleDeletedComments = (commentId) => {
         setComments(
             comments.filter(comment => comment._id !== commentId)
         )
     }
+
 
     // Add a comment 
     const handleComment = async (payload) => {
@@ -151,6 +152,32 @@ const Watch = () => {
     }
 
 
+    // OPTIMIZE: INTEGRATE VIDEO JS PLAYER FOR BETTER PERFOMANCE AND STABILITY
+    const videoPlayerOptions = {
+        controls: true,
+        responsive: true,
+        fluid: true,
+        sources: [
+            {
+                src: video.videoFile,
+                type: 'video/mp4'
+            }
+        ]
+    }
+
+    const handlePlayerReady = async (player) => {
+        playerRef.current = player;
+
+        // You can handle player events here, for example:
+        player.on("waiting", () => {
+            videojs.log("player is waiting");
+        });
+
+        player.on("dispose", () => {
+            videojs.log("player will dispose");
+        });
+    }
+
     React.useEffect(() => {
         fetchVideo()
         fetchComments()
@@ -161,9 +188,9 @@ const Watch = () => {
         <>
             <div className='h-screen w-full '>
 
-                <div className='rounded-md w-[70%] bg-gray-900 h-auto p-3'>
+                <div className='rounded-sm w-[70%] bg-zinc-900 h-auto p-2'>
 
-                    <ReactPlayer
+                    {/* <ReactPlayer
                         controls
                         width="100%"
                         height={'25rem'}
@@ -171,6 +198,13 @@ const Watch = () => {
                         volume={1}
                         playbackRate={1}
                         loop={true}
+                    /> */}
+
+                    {/* VIDEO JS PLAYER  */}
+
+                    <VideoPlayer
+                        onReady={handlePlayerReady}
+                        options={videoPlayerOptions}
                     />
                 </div>
 
@@ -216,9 +250,9 @@ const Watch = () => {
                                     onClick={handleLike}
                                 >
                                     <ThumbsUp />
-                                        Like
+                                    Like
                                 </Button>
-                                
+
                                 <Button
                                     className='rounded-full items-center'
                                     variant='outline'
@@ -264,7 +298,7 @@ const Watch = () => {
                                         type='text'
                                         placeholder='Add a comment...'
                                         className='w-full px-3 py-2'
-                                    {...register('comment', { required: true })}
+                                        {...register('comment', { required: true })}
                                     />
                                     <Button
                                         type='submit'
