@@ -18,7 +18,7 @@ const uploadVideo = asyncHandler(async (req, res) => {
     // step 7: create video object in DB 
     // step 8: return response 
 
-    const { title, description, views } = req.body;
+    const { title, description, views, category, tags } = req.body;
 
 
     const videoLocalPath = req.files?.videoFile[0]?.path;
@@ -48,6 +48,8 @@ const uploadVideo = asyncHandler(async (req, res) => {
             description,
             duration: videoFile.duration,
             views,
+            tags,
+            category,
             isPublished: true,
             owner: req.user?._id
 

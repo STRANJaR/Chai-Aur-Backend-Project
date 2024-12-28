@@ -27,6 +27,14 @@ const videoSchema = new Schema(
             type: Number,
             default: 0
         },
+        tags: {
+            type: [String],
+            default: []
+        },
+        category: {
+            type: String,
+            required: true
+        },
         isPublished: {
             type: Boolean,
             default: true
