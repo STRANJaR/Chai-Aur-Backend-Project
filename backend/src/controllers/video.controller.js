@@ -1,4 +1,5 @@
 import { Video } from "../models/video.model.js";
+import { transcodeVideo } from "../transcoding/videoTranscode.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -32,16 +33,16 @@ const uploadVideo = asyncHandler(async (req, res) => {
     // const videoFile = await uploadOnCloudinary(videoLocalPath)
 
     // FEATURE: implement aws s3 storage to upload video
-    const videoFile = await uploadOnAWS(videoLocalPath)
-    console.log('videoFileController: ', videoFile)
+    // const videoFile = await uploadOnAWS(videoLocalPath)
+    // console.log('videoFileController: ', videoFile)
     
     // FEATURE: implement aws media convert to transcode video
-    const transcoded = await createMediaConvertJob(videoFile.Location, 'arn:aws:s3:::youtube-yard-transcoded')
-    console.log(transcoded)
+        const transcode = await transcodeVideo(videoLocalPath)
+        console.log('transcoded value: ', transcode)
 
     const thumbnail = await uploadOnCloudinary(thumbnailLocalPath)
 
-    if (!videoFile) throw new ApiError(400, "Faild to upload video on AWS")
+    // if (!videoFile) throw new ApiError(400, "Faild to upload video on AWS")
     if (!thumbnail) throw new ApiError(400, "Faild to upload thumbnail on cloudinary")
 
     const video = await Video.create(

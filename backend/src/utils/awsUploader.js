@@ -12,6 +12,12 @@ const s3 = new AWS.S3({
 
 const uploadOnAWS = async (localFilePath) => {
 
+    // Check if the file exists before unlinking
+    if (fs.existsSync(localFilePath)) {
+        console.log(`File exists: ${localFilePath}`);
+    
+    }
+
     try {
         if (!fs.existsSync(localFilePath)) {
             throw new Error(`File not found: ${localFilePath}`);
@@ -39,7 +45,7 @@ const uploadOnAWS = async (localFilePath) => {
 
 
     } catch (error) {
-        fs.unlinkSync(localFilePath)
+        // fs.unlinkSync(localFilePath)
         console.log('Error is aws uploader: ', error)
     }
 
