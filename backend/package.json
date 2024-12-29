@@ -17,6 +17,7 @@
     "prettier": "^3.2.2"
   },
   "dependencies": {
+    "@aws-sdk/client-mediaconvert": "^3.716.0",
     "@huggingface/inference": "^2.8.1",
     "aws-sdk": "^2.1692.0",
     "axios": "^1.7.9",

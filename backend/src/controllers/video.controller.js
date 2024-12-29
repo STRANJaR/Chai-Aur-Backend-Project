@@ -2,6 +2,7 @@ import { Video } from "../models/video.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { createMediaConvertJob } from "../utils/awsTranscodingMediaConverter.js";
 import { uploadOnAWS } from "../utils/awsUploader.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { generateAiImage } from "../utils/openaiImageGenerate.js";
@@ -33,7 +34,10 @@ const uploadVideo = asyncHandler(async (req, res) => {
     // FEATURE: implement aws s3 storage to upload video
     const videoFile = await uploadOnAWS(videoLocalPath)
     console.log('videoFileController: ', videoFile)
-
+    
+    // FEATURE: implement aws media convert to transcode video
+    const transcoded = await createMediaConvertJob(videoFile.Location, 'arn:aws:s3:::youtube-yard-transcoded')
+    console.log(transcoded)
 
     const thumbnail = await uploadOnCloudinary(thumbnailLocalPath)
 
