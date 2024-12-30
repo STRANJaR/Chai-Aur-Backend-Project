@@ -3,8 +3,6 @@ import { transcodeVideo } from "../transcoding/videoTranscode.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { createMediaConvertJob } from "../utils/awsTranscodingMediaConverter.js";
-import { uploadOnAWS } from "../utils/awsUploader.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { generateAiImage } from "../utils/openaiImageGenerate.js";
 
@@ -29,16 +27,13 @@ const uploadVideo = asyncHandler(async (req, res) => {
     if (!videoLocalPath) throw new ApiError(400, "Invalid url of video")
     if (!thumbnailLocalPath) throw new ApiError(400, "Invalid url of thumbnail")
 
-    // CHECK:  depricate cloudinary for video upload
-    // const videoFile = await uploadOnCloudinary(videoLocalPath)
 
-    // FEATURE: implement aws s3 storage to upload video
-    // const videoFile = await uploadOnAWS(videoLocalPath)
-    // console.log('videoFileController: ', videoFile)
-    
-    // FEATURE: implement aws media convert to transcode video
-        const transcode = await transcodeVideo(videoLocalPath)
-        console.log('transcoded value: ', transcode)
+    // FEATURE: video transcoding using ffmpeg
+    const transcode = await transcodeVideo(videoLocalPath)
+    console.log('transcoded value: ', transcode)
+
+
+
 
     const thumbnail = await uploadOnCloudinary(thumbnailLocalPath)
 
@@ -47,11 +42,11 @@ const uploadVideo = asyncHandler(async (req, res) => {
 
     const video = await Video.create(
         {
-            videoFile: videoFile.Location,
+            videoFile: '',
             thumbnail: thumbnail.url,
             title,
             description,
-            duration: videoFile.duration,
+            duration: '',
             views,
             tags,
             category,
