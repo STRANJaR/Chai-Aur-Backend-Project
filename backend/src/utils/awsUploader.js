@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk';
-import fs from 'fs';
+import fs from 'fs-extra';
 import path from 'path';
 
 const s3 = new AWS.S3({
@@ -9,21 +9,29 @@ const s3 = new AWS.S3({
 });
 
 
-const uploadOnAWS = async(localFilePath)=> {
+const uploadOnAWS = async( localDir, s3Dir)=> {
     try {
-        fileContent = fs.readFileSync(localFilePath);
-        const fileName = path.basename(localFilePath);
+        const files = await fs.readdir(localDir);
 
+        for(const fileName of files){
+            const filePath = path.join(localDir, fileName);
+            const fileStat = await fs.stat(filePath);
 
-        const params = {
-            Bucket: process.env.AWS_BUCKET_NAME,
-            Key: `video/${fileName}`,
-            Body: fileContent,
+            if(fileStat.isDirectory()){
+                await uploadOnAWS(filePath, `${s3Dir}/${fileName}`)
+            } else{
+                const fileContent = await fs.readFile(filePath);
+
+                const params = {
+                    Bucket: process.env.AWS_BUCKET_NAME,
+                    Key: `${s3Dir}/${fileName}`,
+                    Body: fileContent,
+                };
+
+                await s3.upload(params).promise();
+                console.log(`Uploaded: ${filePath} to ${params.Key}`);
+            }
         }
-
-        const data = await s3.upload(params).promise();
-        console.log(`File uploaded successfully. ${data.Location}`);
-        return data
 
     } catch (error) {
         console.error(`Error uploading file to S3: ${error.message}`);

@@ -1,9 +1,9 @@
 import { Video } from "../models/video.model.js";
-import { transcodeVideo } from "../transcoding/videoTranscode.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { ffmpegVideoTranscode } from "../utils/ffmpegTranscoding.js";
 import { generateAiImage } from "../utils/openaiImageGenerate.js";
 
 
@@ -28,9 +28,8 @@ const uploadVideo = asyncHandler(async (req, res) => {
     if (!thumbnailLocalPath) throw new ApiError(400, "Invalid url of thumbnail")
 
 
-    // FEATURE: video transcoding using ffmpeg
-    const transcode = await transcodeVideo(videoLocalPath)
-    console.log('transcoded value: ', transcode)
+    const transcodeValue = ffmpegVideoTranscode(videoLocalPath)
+    console.log('transcodedValue: ', transcodeValue)
 
 
 

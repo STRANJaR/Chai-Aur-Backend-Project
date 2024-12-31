@@ -80,6 +80,7 @@ const UploadVideo = () => {
 
     const [loading, setLoading] = useState(false)
     const [videoFile, setVideoFile] = useState(null)
+    console.log('video file: ', videoFile)
     const [thumbnailFile, setThumbnailFile] = useState(null)
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
