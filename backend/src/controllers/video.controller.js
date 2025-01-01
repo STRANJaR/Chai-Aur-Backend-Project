@@ -28,8 +28,8 @@ const uploadVideo = asyncHandler(async (req, res) => {
     if (!thumbnailLocalPath) throw new ApiError(400, "Invalid url of thumbnail")
 
 
-    const transcodeValue = ffmpegVideoTranscode(videoLocalPath)
-    console.log('transcodedValue: ', transcodeValue)
+    const videoUrl = await ffmpegVideoTranscode(videoLocalPath)
+    console.log('videoUrl : ', videoUrl)
 
 
 
@@ -41,11 +41,11 @@ const uploadVideo = asyncHandler(async (req, res) => {
 
     const video = await Video.create(
         {
-            videoFile: '',
+            videoFile: videoUrl,
             thumbnail: thumbnail.url,
             title,
             description,
-            duration: '',
+            duration: 0,
             views,
             tags,
             category,

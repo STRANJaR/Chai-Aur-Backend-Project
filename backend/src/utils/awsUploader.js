@@ -33,10 +33,16 @@ const uploadOnAWS = async( localDir, s3Dir)=> {
             }
         }
 
+        
+
     } catch (error) {
         console.error(`Error uploading file to S3: ${error.message}`);
+        await fs.remove(localDir);
+        console.log(`Deleted local directory ERROR: ${localDir}`);
+
         throw error;
     }
+
 };
 
 export { uploadOnAWS }

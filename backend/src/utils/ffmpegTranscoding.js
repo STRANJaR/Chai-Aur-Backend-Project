@@ -13,8 +13,8 @@ const ffmpegVideoTranscode = async (videoLocalPath) => {
     console.log('Start transcoding for: ', fileName)
 
 
-    const outputPath = `./public/transcoded/${fileName}`
-    const hlsPath = `${outputPath}/${fileName}.m3u8`
+    const outputPath = `./public/transcoded/${fileName.trim()}`
+    const hlsPath = `${outputPath}/${fileName.trim()}.m3u8`
     console.log('hlsPath: ', hlsPath)
 
     if (!fs.existsSync(outputPath)) {
@@ -34,15 +34,16 @@ const ffmpegVideoTranscode = async (videoLocalPath) => {
         console.log(`stdout: ${stdout}`)
         console.log(`stderr: ${stderr}`)
 
-        const videoUrl = `http://localhost:8000/public/transcoded/${fileName}/${fileName}.m3u8`;
-        console.log('Transcoded Video URL: ', videoUrl)
-        return videoUrl
-
-
 
     })
-    const data = await uploadOnAWS(outputPath, fileName)
+    const data = uploadOnAWS(outputPath, fileName.trim())
     console.log('data: ', data);
+
+    // https://youtube-yard.s3.ap-south-1.amazonaws.com/drone/drone.m3u8
+    const videoUrl = `http://youtube-yard.s3.ap-south-1.amazonaws.com/${fileName.trim()}/${fileName.trim()}.m3u8`;
+    console.log('Transcoded Video URL: ', videoUrl)
+    return videoUrl
+
 
 }
 

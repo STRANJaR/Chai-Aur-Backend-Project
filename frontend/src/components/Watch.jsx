@@ -159,8 +159,8 @@ const Watch = () => {
         fluid: true,
         sources: [
             {
-                src: 'https://youtube-yard.s3.ap-south-1.amazonaws.com/drone/drone.m3u8',
-                type: 'application/x-mpegURL'
+                src: video.videoFile,
+                type: "application/x-mpegURL"
             }
         ]
     }
