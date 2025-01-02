@@ -158,7 +158,7 @@ const Header = () => {
 
                             <DropdownMenu>
                                 <DropdownMenuTrigger>
-                                    <Avatar className='h-9 w-9'>
+                                    <Avatar className='h-8 w-8'>
                                         <AvatarImage src={user?.avatar} />
                                         <AvatarFallback>
                                             Me
