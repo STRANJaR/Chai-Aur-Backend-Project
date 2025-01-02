@@ -141,22 +141,41 @@ const updateVideo = asyncHandler(async (req, res) => {
 
 
 const getAllVideos = asyncHandler(async (req, res) => {
-    const allVideos = await Video.aggregate(
-        [
-            {
-                $lookup: {
-                    from: "users",
-                    localField: "owner",
-                    foreignField: "_id",
-                    as: "ownerDetails"
-                }
-            },
-        ]
-    )
+    const { page = 1, limit = 9 } = req.query;
+    try {
 
-    return res
-        .status(200)
-        .json(new ApiResponse(200, allVideos, "Videos fetched successfully"))
+        const videos = await Video.aggregate(
+            [
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "owner",
+                        foreignField: "_id",
+                        as: "ownerDetails"
+                    }
+                },
+            ]
+        )
+            .skip((page - 1) * limit)
+            .limit(Number(limit))
+
+        const totalVideos = await Video.countDocuments();
+
+        return res
+            .status(200)
+            .json(new ApiResponse(
+                200,
+                {
+                    totalVideos,
+                    videos,
+                    currentPage: page,
+                    totalPages: Math.ceil(totalVideos / limit)
+                },
+                "Videos fetched successfully"
+            ))
+    } catch (error) {
+        throw new ApiError(500, 'Error fetching all videos', error)
+    }
 })
 
 
