@@ -4,6 +4,7 @@ import {
     TabsList,
     TabsTrigger,
 } from "../components/ui/tabs"
+import TweetCard from "./TweetCard"
 import UserUploadedVideos from "./User/UserUploadedVideos"
 
 
@@ -14,7 +15,7 @@ const UserProfileTab = () => {
             <TabsList className="grid w-full grid-cols-4 gap-2">
                 <TabsTrigger value="videos">Videos</TabsTrigger>
                 <TabsTrigger value="playlist">Playlist</TabsTrigger>
-                <TabsTrigger value="watch-history">Watch History</TabsTrigger>
+                <TabsTrigger value="tweet">Tweet</TabsTrigger>
                 <TabsTrigger value="following">Following</TabsTrigger>
             </TabsList>
             <TabsContent value="videos">
@@ -25,8 +26,8 @@ const UserProfileTab = () => {
                 playlist
             </TabsContent>
 
-            <TabsContent value="watch-history">
-                WatchHistory
+            <TabsContent value="tweet">
+                <TweetCard/>
             </TabsContent>
 
             <TabsContent value="following">

@@ -154,6 +154,15 @@ const getAllVideos = asyncHandler(async (req, res) => {
                         as: "ownerDetails"
                     }
                 },
+                //OPTIMIZE: change the data type of owenerDetails from array to object 
+                // {
+                //     $addFields: {
+                //         ownerDetails: {
+                //             $arrayElemAt: ["$owenerDetails", 0]
+                //         }
+                //     }
+                // }
+
             ]
         )
             .skip((page - 1) * limit)
