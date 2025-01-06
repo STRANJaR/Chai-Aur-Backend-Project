@@ -13,7 +13,7 @@ import dateFormat from 'dateformat'
 
 
 
-const VideoCard = ({thumbnail, avatarImage, videoTitle, channelName, videoViews, uploadTime, creator}) => {
+const VideoCard = ({thumbnail, avatarImage, videoTitle, channelName, videoViews, uploadTime }) => {
 
 
     return (
