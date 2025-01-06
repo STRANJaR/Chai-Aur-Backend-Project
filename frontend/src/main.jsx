@@ -22,6 +22,7 @@ import Watch from './components/Watch.jsx'
 import { Auth0Provider } from '@auth0/auth0-react'
 import UploadVideo from './components/UploadVideo.jsx'
 import SearchResult from './components/SearchResult.jsx'
+import SingleTweet from './components/SingleTweet.jsx'
 
 
 
@@ -117,6 +118,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <SearchResult />
+          </PrivateRoute>
+        )
+      },
+      {
+        path: '/tweet/:id',
+        element: (
+          <PrivateRoute>
+            <SingleTweet />
           </PrivateRoute>
         )
       },

@@ -7,40 +7,40 @@ import { asyncHandler } from "../utils/asyncHandler.js"
 
 
 // ***CREATE TWEET 
-const createTweet = asyncHandler( async(req, res)=>{
-   /* // ALGORITHM FOR CREATE TWEETS 
-
-    step 1: request the content from user 
-    step 2: check if empty content 
-    step 3: save the content in the tweet model 
-    const {content} = req.body
-    */
+const createTweet = asyncHandler(async (req, res) => {
+    /* // ALGORITHM FOR CREATE TWEETS 
+ 
+     step 1: request the content from user 
+     step 2: check if empty content 
+     step 3: save the content in the tweet model 
+     const {content} = req.body
+     */
 
     // step 1: request the content form user 
     const { content } = req.body
 
     // step 2: check if empty content
-    if(!content) throw new ApiError(400, "Please write something...")
+    if (!content) throw new ApiError(400, "Please write something...")
 
     const tweet = await Tweet.create(
-       {
-        content,
-        owner: req.user?._id
-       }
+        {
+            content,
+            owner: req.user?._id
+        }
     )
 
-    if(!tweet) throw new ApiError(400, "something went wrong while creating tweet")
+    if (!tweet) throw new ApiError(400, "something went wrong while creating tweet")
 
     return res
-    .status(201)
-    .json(
-        new ApiResponse(200, tweet, "Tweet created successfully ")
-    )
+        .status(201)
+        .json(
+            new ApiResponse(200, tweet, "Tweet created successfully ")
+        )
 })
 
 
 // ***UPDATE TWEET 
-const updateTweet = asyncHandler( async(req, res) => {
+const updateTweet = asyncHandler(async (req, res) => {
     // Algorithm while updating the tweet 
 
     // step 1: requirement of tweet id - in params 
@@ -54,13 +54,13 @@ const updateTweet = asyncHandler( async(req, res) => {
     const { tweetId } = req.params
     const { content } = req.body
 
-    if(!tweetId) throw new ApiError(400, "Invalid tweetId")
+    if (!tweetId) throw new ApiError(400, "Invalid tweetId")
 
-    if(!content) throw new ApiError(400, "content is required")
+    if (!content) throw new ApiError(400, "content is required")
 
     const tweet = await Tweet.findById(tweetId)
 
-    if(!tweet) throw new ApiError(400, "tweed id not found")
+    if (!tweet) throw new ApiError(400, "tweed id not found")
     const newTweet = await Tweet.findByIdAndUpdate(
         tweetId,
         {
@@ -68,40 +68,63 @@ const updateTweet = asyncHandler( async(req, res) => {
                 content
             }
         },
-        {new: true}
+        { new: true }
     )
 
     return res
-    .status(200)
-    .json(
-        new ApiResponse(200, newTweet, "Tweet updated successfully")
-    )
-}) 
+        .status(200)
+        .json(
+            new ApiResponse(200, newTweet, "Tweet updated successfully")
+        )
+})
 
 
 
 // ***DELETE TWEET 
-const deleteTweet = asyncHandler( async(req, res) => {
+const deleteTweet = asyncHandler(async (req, res) => {
     const { tweetId } = req.params
 
-    if(!tweetId) throw new ApiError(400, "tweet id not found")
+    if (!tweetId) throw new ApiError(400, "tweet id not found")
 
     const tweet = Tweet.findById(tweetId)
 
-    if(!tweet) throw new ApiError(400, "tweet id not found")
+    if (!tweet) throw new ApiError(400, "tweet id not found")
 
     await Tweet.findByIdAndDelete(tweetId)
 
     return res
-    .status(200)
-    .json(
-        new ApiResponse(200, {}, "Tweet deleted successfully ")
-    )
+        .status(200)
+        .json(
+            new ApiResponse(200, {}, "Tweet deleted successfully ")
+        )
+})
+
+
+// GET SINGLE TWEET
+
+const getSingleTweet = asyncHandler(async (req, res) => {
+    const { tweetId } = req.params;
+    if (!tweetId) throw new ApiError(400, "tweet id not found")
+
+    try {
+        const tweet = await Tweet.findById(tweetId)
+
+        if (!tweet) throw new ApiError(400, "tweet id not found")
+
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(200, tweet, "Tweet fetched successfully")
+            )
+    } catch (error) {
+        console.log('Error while fetching tweet: ', error)
+        throw new ApiError(400, "something went wrong while fetching the tweet")
+    }
 })
 
 
 // GET ALL TWEETS OF USER 
-const getUserTweets = asyncHandler( async(req, res) => {
+const getUserTweets = asyncHandler(async (req, res) => {
 
     const { userId } = req.params;
 
@@ -145,15 +168,16 @@ const getUserTweets = asyncHandler( async(req, res) => {
         ]
     )
 
-    if(!userAllTweets) throw new ApiError(400, "something went wrong while fetching the tweets")
+    if (!userAllTweets) throw new ApiError(400, "something went wrong while fetching the tweets")
 
     return res
-    .status(200)
-    .json(new ApiResponse(200, userAllTweets, "Tweets fetched successfully"))
+        .status(200)
+        .json(new ApiResponse(200, userAllTweets, "Tweets fetched successfully"))
 })
 export {
     createTweet,
     updateTweet,
     deleteTweet,
-    getUserTweets
+    getUserTweets,
+    getSingleTweet
 }
